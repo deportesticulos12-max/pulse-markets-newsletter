@@ -557,8 +557,8 @@
                     {
                         symbol: 'SOL', name: 'Solana', tvSymbol: 'BINANCE:SOLUSDT',
                         badge: 'strong-buy', badgeText: 'Momentum',
-                        metrics: [{ label: 'RSI (14)', value: '62 (Fuerte)' }, { label: 'Vol. 24h', value: '$3.8B' }, { label: 'Tipo', value: 'Momentum Trading' }, { label: 'Desde ATH', value: '~-20%' }],
-                        reason: '<strong>Trading:</strong> Fuerte demanda en el mercado spot. Ruptura de resistencia diagonal descendente. Target técnico de corto plazo en $180.'
+                        metrics: [{ label: 'RSI (14)', value: '38 (Cerca Sobrevendido)' }, { label: 'Vol. 24h', value: '$1.8B' }, { label: 'Tipo', value: 'Soporte Clave' }, { label: 'Desde ATH', value: '~-73%' }],
+                        reason: '<strong>Trading:</strong> Tras retroceder hacia la zona de soporte psicológico de $68-$70, muestra rechazo a seguir bajando. Target técnico de corto plazo en $78-$80 buscando un rebote rápido.'
                     },
                     {
                         symbol: 'WIF', name: 'dogwifhat', tvSymbol: 'BINANCE:WIFUSDT',
