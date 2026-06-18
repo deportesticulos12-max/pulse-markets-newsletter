@@ -689,7 +689,7 @@
     }
 
     // ── Load All Data ──
-    async function loadAllData() {
+    async function loadAllData(isAutoRefresh = false) {
         // These run in parallel for speed
         const tasks = [
             loadDollars(),
@@ -701,12 +701,14 @@
         ];
         await Promise.allSettled(tasks);
         
-        // After fetching all base data, trigger AI Analysis
-        generateDailyAnalysis();
+        // After fetching all base data, trigger AI Analysis (only if not an auto-refresh)
+        if (!isAutoRefresh) {
+            generateDailyAnalysis();
+        }
     }
 
     // ── AI Analysis (Gemini) ──
-    async function generateDailyAnalysis() {
+    async function generateDailyAnalysis(forceRefresh = false) {
         const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42SVNuQUdhRGtobTNNS2dhVFlpWDliek40eWFjY0xQZG1OYURwblVyNjNXVVE=');
         const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
         const container = document.getElementById('ai-report-content');
@@ -723,8 +725,12 @@
         }
 
         // Only generate once per session to save API calls unless refreshed explicitly
+        if (forceRefresh) {
+            localStorage.removeItem('pm_ai_analysis');
+        }
+        
         const cachedAnalysis = Cache.get('ai_analysis');
-        if (cachedAnalysis) {
+        if (cachedAnalysis && !forceRefresh) {
             container.innerHTML = marked.parse(cachedAnalysis);
             return;
         }
@@ -828,7 +834,7 @@ FORMATO GENERAL:
             container.innerHTML = `
                 <div class="api-key-missing">
                     <p style="color: #ef4444;">Error al generar el reporte: ${error.message}</p>
-                    <button onclick="localStorage.removeItem('pm_ai_analysis'); loadAllData();">Reintentar</button>
+                    <button onclick="localStorage.removeItem('pm_ai_analysis'); generateDailyAnalysis();">Reintentar</button>
                 </div>
             `;
         }
@@ -841,8 +847,25 @@ FORMATO GENERAL:
         renderOpportunities();
         loadAllData();
 
-        // Auto refresh
-        setInterval(loadAllData, CONFIG.REFRESH_INTERVAL);
+        // Setup AI Manual Refresh
+        const refreshAiBtn = document.getElementById('refresh-ai-btn');
+        if (refreshAiBtn) {
+            refreshAiBtn.addEventListener('click', () => {
+                const svg = refreshAiBtn.querySelector('svg');
+                if (svg) svg.style.animation = 'spin 1s linear infinite';
+                refreshAiBtn.disabled = true;
+                
+                generateDailyAnalysis(true).finally(() => {
+                    if (svg) svg.style.animation = 'none';
+                    refreshAiBtn.disabled = false;
+                });
+            });
+        }
+
+        // Auto refresh (only updates market data, not the AI summary)
+        setInterval(() => {
+            loadAllData(true);
+        }, CONFIG.REFRESH_INTERVAL);
     }
 
     if (document.readyState === 'loading') {
