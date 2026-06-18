@@ -798,13 +798,32 @@ FORMATO GENERAL:
             let cleanMarkdown = textResponse;
             let parsedOpps = null;
             
-            const match = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/);
+            let match = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/i);
+            
+            // Fallback: If Gemini forgot the tags but output a json block at the end
+            if (!match) {
+                const codeBlocks = [...textResponse.matchAll(/```(?:json)?\s*([\s\S]*?)\s*```/gi)];
+                if (codeBlocks.length > 0) {
+                    // Assume the last code block contains the opportunities JSON
+                    match = codeBlocks[codeBlocks.length - 1];
+                }
+            }
+
             if (match && match[1]) {
                 try {
                     let jsonString = match[1].replace(/```json/gi, '').replace(/```/g, '').trim();
+                    // Sometimes there is text before or after the JSON braces. Extract everything from first { to last }
+                    const firstBrace = jsonString.indexOf('{');
+                    const lastBrace = jsonString.lastIndexOf('}');
+                    if (firstBrace !== -1 && lastBrace !== -1) {
+                        jsonString = jsonString.substring(firstBrace, lastBrace + 1);
+                    }
+                    
                     parsedOpps = JSON.parse(jsonString);
-                    // Remove JSON tag from main output markdown to keep it clean
-                    cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/g, '').trim();
+                    // Remove the parsed block from markdown to keep it clean
+                    cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/gi, '').trim();
+                    // If fallback was used, try to remove the JSON block from markdown too
+                    cleanMarkdown = cleanMarkdown.replace(/```(?:json)?\s*\{\s*"crypto"[\s\S]*?```/gi, '').trim();
                 } catch (jsonErr) {
                     console.error("Failed to parse AI Opportunities JSON:", jsonErr);
                     console.log("Raw JSON string was:", match[1]);
