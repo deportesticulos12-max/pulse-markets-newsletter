@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Markets | Newsletter Financiero Diario</title>
+    <meta name="description" content="Newsletter financiero diario con análisis del mercado argentino, estadounidense y de criptomonedas. Datos en vivo, gráficos TradingView y oportunidades de inversión.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M16 2L28 9V23L16 30L4 23V9L16 2Z' stroke='url(%23logoGrad)' stroke-width='2' fill='none'/%3E%3Cpath d='M16 8L22 11.5V18.5L16 22L10 18.5V11.5L16 8Z' fill='url(%23logoGrad)'/%3E%3Cdefs%3E%3ClinearGradient id='logoGrad' x1='4' y1='2' x2='28' y2='30'%3E%3Cstop stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Markdown Parser for AI Output -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="main-header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo-group">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 32 32" fill="none">
+                            <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+                            <path d="M16 8L22 11.5V18.5L16 22L10 18.5V11.5L16 8Z" fill="url(#logoGrad)"/>
+                            <defs><linearGradient id="logoGrad" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="logo-text">Pulse<span>Markets</span></h1>
+                        <p class="logo-subtitle">Financial Intelligence Newsletter</p>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div class="date-badge" id="current-date"></div>
+                    <button class="config-btn" id="config-btn" title="Configuración API">
+                        <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+                    </button>
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Config Panel -->
+    <div class="config-panel" id="config-panel">
+        <div class="config-panel-inner">
+            <div class="config-header">
+                <h3>⚙️ Configuración de APIs</h3>
+                <button class="config-close" id="config-close">✕</button>
+            </div>
+            <div class="config-body">
+                <div class="config-group">
+                <label for="gemini-api-key">Gemini API Key (Google AI)</label>
+                <input type="password" id="gemini-api-key" placeholder="Pega tu clave API aquí">
+                <p class="config-help">Se usa para generar el reporte de inteligencia artificial automáticamente. <a href="https://aistudio.google.com/app/apikey" target="_blank">Obtener clave gratuita</a>.</p>
+            </div>
+            
+            <div class="config-group">
+                <label for="cg-api-key">CoinGecko API Key (Opcional)</label>
+                <input type="password" id="cg-api-key" placeholder="CG-xxxxxxxxxxxx">
+                <p class="config-help">Mejora los límites de conexión de criptomonedas. <a href="https://www.coingecko.com/en/api/pricing" target="_blank">Obtener aquí</a>.</p>
+            </div>
+                <div class="config-actions">
+                    <button class="btn-save" id="config-save">Guardar</button>
+                    <span class="config-status" id="config-status"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TradingView Ticker Tape -->
+    <div class="ticker-bar" id="ticker-bar">
+        <div class="tradingview-widget-container" id="tv-ticker-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
+                    {"proName": "BCBA:IMV", "title": "MERVAL"},
+                    {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
+                    {"proName": "FOREXCOM:NSXUSD", "title": "NASDAQ"},
+                    {"proName": "TVC:DJI", "title": "Dow Jones"},
+                    {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
+                    {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
+                    {"proName": "BINANCE:SOLUSDT", "title": "SOL"},
+                    {"proName": "BCBA:GGAL", "title": "Galicia"},
+                    {"proName": "BCBA:YPFD", "title": "YPF"},
+                    {"proName": "BCBA:SUPV", "title": "Supervielle"},
+                    {"proName": "BCBA:PAMP", "title": "Pampa"},
+                    {"proName": "FX_IDC:USDARS", "title": "USD/ARS"}
+                ],
+                "showSymbolLogo": true,
+                "isTransparent": true,
+                "displayMode": "adaptive",
+                "colorTheme": "dark",
+                "locale": "es"
+            }
+            </script>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="section-nav" id="section-nav">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-section="overview" id="tab-overview">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/><path d="M10 5v5l3.5 2"/></svg>
+                    Resumen
+                </button>
+                <button class="nav-tab" data-section="argentina" id="tab-argentina">🇦🇷 Argentina</button>
+                <button class="nav-tab" data-section="usa" id="tab-usa">🇺🇸 EE.UU.</button>
+                <button class="nav-tab" data-section="crypto" id="tab-crypto">₿ Crypto</button>
+                <button class="nav-tab" data-section="news" id="tab-news">📰 Noticias</button>
+                <button class="nav-tab" data-section="opportunities" id="tab-opportunities">💎 Oportunidades</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- OVERVIEW SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section active" id="section-overview">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon pulse-icon">◉</span> Pulso del Mercado</h2>
+                    <p class="section-subtitle">Resumen ejecutivo de los mercados globales — datos en vivo</p>
+                </div>
+
+                <!-- AI Insights Section -->
+                <div class="card glass-card ai-report-card">
+                    <h3 class="card-title ai-title"><span class="title-icon pulse-icon">✨</span> Inteligencia Artificial - Resumen y Proyecciones Diarias</h3>
+                    <div id="ai-report-content" class="ai-content">
+                        <div class="ai-loading">
+                            <div class="spinner"></div> 
+                            <p>Recopilando datos y redactando el reporte diario con Gemini AI...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid" id="overview-metrics">
+                    <div class="metric-card accent-indigo skeleton-parent"><div class="metric-label">MERVAL</div><div class="metric-value" id="m-merval"><div class="skeleton skeleton-text"></div></div><div class="metric-change" id="m-merval-chg"></div></div>
+                    <div class="metric-card accent-emerald skeleton-parent"><div class="metric-label">DÓLAR BLUE</div><div class="metric-value" id="m-blue"><div class="skeleton skeleton-text"></div></div><div class="metric-change" id="m-blue-chg"></div></div>
+                    <div class="metric-card accent-amber skeleton-parent"><div class="metric-label">BITCOIN</div><div class="metric-value" id="m-btc"><div class="skeleton skeleton-text"></div></div><div class="metric-change" id="m-btc-chg"></div></div>
+                    <div class="metric-card accent-purple skeleton-parent"><div class="metric-label">RIESGO PAÍS</div><div class="metric-value" id="m-riesgo"><div class="skeleton skeleton-text"></div></div><div class="metric-change" id="m-riesgo-chg"></div></div>
+                    <div class="metric-card accent-rose skeleton-parent"><div class="metric-label">FEAR & GREED</div><div class="metric-value" id="m-fng"><div class="skeleton skeleton-text"></div></div><div class="metric-change" id="m-fng-chg"></div></div>
+                </div>
+
+                <!-- Sentiment -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📊 Sentimiento del Mercado Crypto</h3>
+                    <div class="fng-display" id="fng-display">
+                        <div class="fng-loading"><div class="spinner"></div> Cargando Fear & Greed Index...</div>
+                    </div>
+                </div>
+
+                <!-- Market Overview Widget -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🌍 Vista General de Mercados</h3>
+                    <div class="tv-widget-container" style="height:460px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                            {
+                                "colorTheme": "dark",
+                                "dateRange": "1D",
+                                "showChart": true,
+                                "locale": "es",
+                                "isTransparent": true,
+                                "showSymbolLogo": true,
+                                "showFloatingTooltip": true,
+                                "width": "100%",
+                                "height": "100%",
+                                "tabs": [
+                                    {
+                                        "title": "Índices",
+                                        "symbols": [
+                                            {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+                                            {"s": "FOREXCOM:NSXUSD", "d": "NASDAQ 100"},
+                                            {"s": "TVC:DJI", "d": "Dow Jones"},
+                                            {"s": "BCBA:IMV", "d": "MERVAL"},
+                                            {"s": "TVC:VIX", "d": "VIX (Volatilidad)"}
+                                        ]
+                                    },
+                                    {
+                                        "title": "Crypto",
+                                        "symbols": [
+                                            {"s": "BINANCE:BTCUSDT", "d": "Bitcoin"},
+                                            {"s": "BINANCE:ETHUSDT", "d": "Ethereum"},
+                                            {"s": "BINANCE:SOLUSDT", "d": "Solana"},
+                                            {"s": "BINANCE:BNBUSDT", "d": "BNB"},
+                                            {"s": "BINANCE:XRPUSDT", "d": "XRP"}
+                                        ]
+                                    },
+                                    {
+                                        "title": "Argentina",
+                                        "symbols": [
+                                            {"s": "BCBA:GGAL", "d": "Grupo Galicia"},
+                                            {"s": "BCBA:YPFD", "d": "YPF"},
+                                            {"s": "BCBA:PAMP", "d": "Pampa Energía"},
+                                            {"s": "BCBA:SUPV", "d": "Supervielle"},
+                                            {"s": "BCBA:BBAR", "d": "BBVA Argentina"}
+                                        ]
+                                    },
+                                    {
+                                        "title": "Divisas",
+                                        "symbols": [
+                                            {"s": "FX_IDC:USDARS", "d": "USD/ARS"},
+                                            {"s": "FX:EURUSD", "d": "EUR/USD"},
+                                            {"s": "FX:USDJPY", "d": "USD/JPY"},
+                                            {"s": "TVC:DXY", "d": "Índice Dólar (DXY)"},
+                                            {"s": "TVC:GOLD", "d": "Oro (XAU/USD)"}
+                                        ]
+                                    }
+                                ]
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- ARGENTINA SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section" id="section-argentina">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon">🇦🇷</span> Mercado Argentino</h2>
+                    <p class="section-subtitle">Datos en vivo de DolarAPI + ArgentinaDatos + TradingView</p>
+                </div>
+
+                <!-- Dollar Rates (from DolarAPI) -->
+                <div class="subsection-title">Cotización del Dólar <span class="data-source">vía DolarAPI</span></div>
+                <div class="dollar-grid" id="dollar-grid">
+                    <div class="dollar-card skeleton-parent"><div class="dollar-type">Cargando...</div><div class="skeleton skeleton-block"></div></div>
+                    <div class="dollar-card skeleton-parent"><div class="dollar-type">Cargando...</div><div class="skeleton skeleton-block"></div></div>
+                    <div class="dollar-card skeleton-parent"><div class="dollar-type">Cargando...</div><div class="skeleton skeleton-block"></div></div>
+                    <div class="dollar-card skeleton-parent"><div class="dollar-type">Cargando...</div><div class="skeleton skeleton-block"></div></div>
+                </div>
+
+                <!-- Argentine Macro Data (from ArgentinaDatos) -->
+                <div class="subsection-title">Indicadores Macro <span class="data-source">vía ArgentinaDatos</span></div>
+                <div class="macro-grid" id="arg-macro-grid">
+                    <div class="macro-card skeleton-parent"><div class="macro-label">Riesgo País</div><div class="macro-value"><div class="skeleton skeleton-text"></div></div></div>
+                    <div class="macro-card skeleton-parent"><div class="macro-label">Inflación Mensual</div><div class="macro-value"><div class="skeleton skeleton-text"></div></div></div>
+                    <div class="macro-card skeleton-parent"><div class="macro-label">Inflación Interanual</div><div class="macro-value"><div class="skeleton skeleton-text"></div></div></div>
+                    <div class="macro-card skeleton-parent"><div class="macro-label">Tasa Plazo Fijo</div><div class="macro-value"><div class="skeleton skeleton-text"></div></div></div>
+                </div>
+
+                <!-- Merval Chart (TradingView) -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📈 Índice MERVAL — Gráfico Interactivo</h3>
+                    <div class="tv-chart-container" id="tv-merval-chart">
+                        <div class="tradingview-widget-container">
+                            <div id="tradingview_merval"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                            <script type="text/javascript">
+                            new TradingView.widget({
+                                "container_id": "tradingview_merval",
+                                "symbol": "BCBA:IMV",
+                                "interval": "D",
+                                "timezone": "America/Argentina/Buenos_Aires",
+                                "theme": "dark",
+                                "style": "1",
+                                "locale": "es",
+                                "toolbar_bg": "#0c1020",
+                                "enable_publishing": false,
+                                "allow_symbol_change": true,
+                                "details": true,
+                                "calendar": false,
+                                "studies": ["RSI@tv-basicstudies", "MASimple@tv-basicstudies"],
+                                "autosize": true,
+                                "backgroundColor": "rgba(12, 16, 32, 0)"
+                            });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Argentine Stocks (TradingView Screener) -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🏆 Panel Líder del Merval</h3>
+                    <div class="tv-widget-container" style="height:480px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+                            {
+                                "width": "100%",
+                                "height": "100%",
+                                "defaultColumn": "overview",
+                                "defaultScreen": "general",
+                                "market": "argentina",
+                                "showToolbar": true,
+                                "colorTheme": "dark",
+                                "locale": "es",
+                                "isTransparent": true
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- USA SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section" id="section-usa">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon">🇺🇸</span> Mercado Estadounidense</h2>
+                    <p class="section-subtitle">Wall Street, índices y calendario económico en vivo</p>
+                </div>
+
+                <!-- S&P 500 Chart -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📈 S&P 500 — Gráfico Interactivo</h3>
+                    <div class="tv-chart-container" id="tv-sp500-chart">
+                        <div class="tradingview-widget-container">
+                            <div id="tradingview_sp500"></div>
+                            <script type="text/javascript">
+                            new TradingView.widget({
+                                "container_id": "tradingview_sp500",
+                                "symbol": "FOREXCOM:SPXUSD",
+                                "interval": "D",
+                                "timezone": "America/New_York",
+                                "theme": "dark",
+                                "style": "1",
+                                "locale": "es",
+                                "toolbar_bg": "#0c1020",
+                                "enable_publishing": false,
+                                "allow_symbol_change": true,
+                                "details": true,
+                                "studies": ["RSI@tv-basicstudies", "MASimple@tv-basicstudies"],
+                                "autosize": true,
+                                "backgroundColor": "rgba(12, 16, 32, 0)"
+                            });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- US Sector Heatmap -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🗺️ Heatmap del Mercado</h3>
+                    <div class="tv-widget-container" style="height:480px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
+                            {
+                                "exchanges": [],
+                                "dataSource": "SPX500",
+                                "grouping": "sector",
+                                "blockSize": "market_cap_basic",
+                                "blockColor": "change",
+                                "locale": "es",
+                                "symbolUrl": "",
+                                "colorTheme": "dark",
+                                "hasTopBar": true,
+                                "isDataSet498": true,
+                                "isZoomEnabled": true,
+                                "hasSymbolTooltip": true,
+                                "isTransparent": true,
+                                "width": "100%",
+                                "height": "100%"
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Calendar -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📅 Calendario Económico — Tasas Fed, CPI, NFP y más</h3>
+                    <p class="card-subtitle">Los eventos que impactan todos los mercados del mundo</p>
+                    <div class="tv-widget-container" style="height:480px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                            {
+                                "colorTheme": "dark",
+                                "isTransparent": true,
+                                "width": "100%",
+                                "height": "100%",
+                                "locale": "es",
+                                "importanceFilter": "0,1",
+                                "countryFilter": "us,ar,eu,cn,jp,gb"
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- US Top Stocks -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🏆 Top Acciones de EE.UU.</h3>
+                    <div class="tv-widget-container" style="height:480px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+                            {
+                                "width": "100%",
+                                "height": "100%",
+                                "defaultColumn": "overview",
+                                "defaultScreen": "most_capitalized",
+                                "market": "america",
+                                "showToolbar": true,
+                                "colorTheme": "dark",
+                                "locale": "es",
+                                "isTransparent": true
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- CRYPTO SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section" id="section-crypto">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon">₿</span> Mercado Crypto</h2>
+                    <p class="section-subtitle">Datos en vivo de CoinGecko + gráficos TradingView</p>
+                </div>
+
+                <!-- Crypto Top Cards (from CoinGecko) -->
+                <div class="crypto-top-grid" id="crypto-top-grid">
+                    <div class="crypto-hero-card btc skeleton-parent"><div class="crypto-symbol">BTC</div><div class="crypto-name">Bitcoin</div><div class="crypto-price"><div class="skeleton skeleton-text-lg"></div></div></div>
+                    <div class="crypto-hero-card eth skeleton-parent"><div class="crypto-symbol">ETH</div><div class="crypto-name">Ethereum</div><div class="crypto-price"><div class="skeleton skeleton-text-lg"></div></div></div>
+                    <div class="crypto-hero-card sol skeleton-parent"><div class="crypto-symbol">SOL</div><div class="crypto-name">Solana</div><div class="crypto-price"><div class="skeleton skeleton-text-lg"></div></div></div>
+                </div>
+
+                <!-- BTC Chart -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📈 Bitcoin — Gráfico Interactivo</h3>
+                    <div class="tv-chart-container" id="tv-btc-chart">
+                        <div class="tradingview-widget-container">
+                            <div id="tradingview_btc"></div>
+                            <script type="text/javascript">
+                            new TradingView.widget({
+                                "container_id": "tradingview_btc",
+                                "symbol": "BINANCE:BTCUSDT",
+                                "interval": "D",
+                                "timezone": "America/Argentina/Buenos_Aires",
+                                "theme": "dark",
+                                "style": "1",
+                                "locale": "es",
+                                "toolbar_bg": "#0c1020",
+                                "enable_publishing": false,
+                                "allow_symbol_change": true,
+                                "details": true,
+                                "studies": ["RSI@tv-basicstudies", "MASimple@tv-basicstudies"],
+                                "autosize": true,
+                                "backgroundColor": "rgba(12, 16, 32, 0)"
+                            });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto Table (from CoinGecko) -->
+                <div class="card glass-card">
+                    <h3 class="card-title">📊 Top Criptomonedas por Market Cap <span class="data-source">vía CoinGecko</span></h3>
+                    <div class="stocks-table" id="crypto-table">
+                        <div class="table-loading"><div class="spinner"></div> Cargando datos de CoinGecko...</div>
+                    </div>
+                </div>
+
+                <!-- Global Crypto Data -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🌐 Datos Globales del Mercado Crypto <span class="data-source">vía CoinGecko</span></h3>
+                    <div class="defi-grid" id="crypto-global-grid">
+                        <div class="defi-card skeleton-parent"><div class="defi-title">Market Cap Total</div><div class="defi-value"><div class="skeleton skeleton-text"></div></div></div>
+                        <div class="defi-card skeleton-parent"><div class="defi-title">Volumen 24h</div><div class="defi-value"><div class="skeleton skeleton-text"></div></div></div>
+                        <div class="defi-card skeleton-parent"><div class="defi-title">BTC Dominance</div><div class="defi-value"><div class="skeleton skeleton-text"></div></div></div>
+                        <div class="defi-card skeleton-parent"><div class="defi-title">Criptomonedas Activas</div><div class="defi-value"><div class="skeleton skeleton-text"></div></div></div>
+                    </div>
+                </div>
+
+                <!-- Crypto Heatmap -->
+                <div class="card glass-card">
+                    <h3 class="card-title">🗺️ Heatmap Crypto</h3>
+                    <div class="tv-widget-container" style="height:480px;">
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js" async>
+                            {
+                                "dataSource": "Crypto",
+                                "blockSize": "market_cap_calc",
+                                "blockColor": "change",
+                                "locale": "es",
+                                "symbolUrl": "",
+                                "colorTheme": "dark",
+                                "hasTopBar": true,
+                                "isDataSetEnabled": true,
+                                "isZoomEnabled": true,
+                                "hasSymbolTooltip": true,
+                                "isTransparent": true,
+                                "width": "100%",
+                                "height": "100%"
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- NEWS SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section" id="section-news">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon">📰</span> Noticias en Vivo</h2>
+                    <p class="section-subtitle">Últimas novedades del mundo Crypto y Mercados Tradicionales</p>
+                </div>
+
+                <div class="news-layout">
+                    <!-- Column 1: Cripto -->
+                    <div class="card glass-card">
+                        <h3 class="card-title">₿ Mundo Crypto</h3>
+                        <p class="card-subtitle">Vía Cointelegraph</p>
+                        <div class="rss-news-container" id="rss-crypto-container" style="height:560px; overflow-y:auto; margin-top: 15px;">
+                            <div class="table-loading"><div class="spinner"></div> Buscando últimas noticias...</div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Wall Street -->
+                    <div class="card glass-card">
+                        <h3 class="card-title">🇺🇸 Wall Street & Global</h3>
+                        <p class="card-subtitle">Vía Investing.com</p>
+                        <div class="rss-news-container" id="rss-us-container" style="height:560px; overflow-y:auto; margin-top: 15px;">
+                            <div class="table-loading"><div class="spinner"></div> Buscando últimas noticias...</div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Argentina RSS -->
+                    <div class="card glass-card">
+                        <h3 class="card-title">🇦🇷 Economía Argentina</h3>
+                        <p class="card-subtitle">Vía Ámbito Financiero</p>
+                        <div class="rss-news-container" id="rss-news-container" style="height:560px; overflow-y:auto; margin-top: 15px;">
+                            <div class="table-loading"><div class="spinner"></div> Buscando últimas noticias...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- OPPORTUNITIES SECTION -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="content-section" id="section-opportunities">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-icon">💎</span> Oportunidades de Inversión</h2>
+                    <p class="section-subtitle">Activos subvaluados con alto potencial de retorno</p>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="disclaimer-banner" id="disclaimer-banner">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                    <p><strong>Aviso Legal:</strong> Este análisis es informativo y no constituye asesoramiento financiero. Toda inversión conlleva riesgo. Realizá tu propia investigación antes de invertir.</p>
+                </div>
+
+                <!-- Argentine Opportunities with Mini Charts -->
+                <div class="subsection-title">🇦🇷 Acciones Argentinas Subvaluadas</div>
+                <div class="opportunities-grid" id="arg-opportunities"></div>
+
+                <!-- US Opportunities with Mini Charts -->
+                <div class="subsection-title">🇺🇸 Acciones Estadounidenses Subvaluadas</div>
+                <div class="opportunities-grid" id="us-opportunities"></div>
+
+                <!-- Crypto Opportunities with Mini Charts -->
+                <div class="subsection-title">₿ Criptomonedas Subvaluadas</div>
+                <div class="opportunities-grid" id="crypto-opportunities"></div>
+
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="footer-logo">Pulse<span>Markets</span></span>
+                    <p>Tu fuente diaria de inteligencia financiera</p>
+                </div>
+                <div class="footer-sources">
+                    <p class="footer-apis">Fuentes: TradingView · CoinGecko · DolarAPI · ArgentinaDatos · FearGreedChart</p>
+                    <p class="footer-disclaimer">La información presentada no constituye asesoramiento financiero.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
