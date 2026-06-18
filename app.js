@@ -774,14 +774,17 @@ DATOS ACTUALES DEL MERCADO:
 
 PAUTAS CRÍTICAS DE CONTEXTO:
 - En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
-- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes de alto nivel, tales como el conflicto o tensiones entre Estados Unidos e Irán, y cómo estas afectan la aversión al riesgo en los mercados globales, el precio de commodities como el petróleo y el comportamiento de refugio de activos como el oro o Bitcoin.
+- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel (por ejemplo, tensiones entre EE.UU. e Irán, guerras comerciales, conflictos en Europa, etc.) basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
+- Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). 
+- Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
 
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
-1. CONTEXTO MACROECONÓMICO (Global y local, incluyendo análisis de las tensiones geopolíticas entre EE.UU. e Irán si aplican al sentimiento general)
-2. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC y F&G)
-3. SENTIMIENTO DEL MERCADO
-4. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
-5. RECOMENDACIONES TÁCTICAS
+1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
+2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre. Mención a la acumulación institucional de Oro y demanda global de Cobre)
+3. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC y F&G)
+4. SENTIMIENTO DEL MERCADO
+5. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
+6. RECOMENDACIONES TÁCTICAS
 
 FORMATO GENERAL:
 - Utiliza Markdown para la estructura (títulos H2, listas, negritas).
