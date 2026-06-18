@@ -699,7 +699,7 @@ Si el Horizonte Temporal solicitado es LARGO PLAZO:
 - Categoría 3: **Acciones Argentinas**: Elige empresas exportadoras netas o de energía con flujos de caja firmes y valuaciones contables descontadas (ej: Central Puerto, Aluar, YPF, Pampa Energía).
 
 Si el Horizonte Temporal solicitado es CORTO PLAZO:
-- Categoría 1: **Criptomonedas**: ¡ESTÁ PROHIBIDO sugerir solo BTC y ETH repetidamente! Debes seleccionar activos de alta volatilidad y beta elevada dentro del Top 200 que muestren momentum técnico o sobreventa madura para un rebote/swing trading rápido en 1-14 días (ej: SOL, NEAR, AVAX, FTM, o memecoins líquidas en tendencia como WIF/PEPE/DOGE).
+- Categoría 1: **Criptomonedas**: ¡ESTÁ PROHIBIDO sugerir solo BTC y ETH repetidamente! Debes seleccionar activos de alta volatilidad y beta elevada dentro del Top 200 que muestren momentum técnico o sobreventa madura para un rebote/swing trading rápido en 1-14 días (ej: SOL, NEAR, AVAX, FTM). REGLA ESTRICTA SOBRE MEMECOINS: Prioriza proyectos serios con respaldo tecnológico o utilidad real (infraestructura, L1s, L2s). NO recomiendes más de una memecoin por reporte (idealmente ninguna), y solo hazlo si presenta una oportunidad técnica innegable y abrumadoramente clara; evita inundar de memes las opciones de corto plazo.
 - Categoría 2: **Acciones EE.UU.**: Enfócate en activos de alto volumen y volatilidad listos para rupturas técnicas o rebotes intradiarios (ej: Tesla, NVIDIA, Coinbase, MicroStrategy).
 - Categoría 3: **Acciones Argentinas**: Elige papeles con alta volatilidad y liquidez local para trading rápido (ej: Grupo Galicia, Banco Macro, YPF, Pampa Energía).
 
