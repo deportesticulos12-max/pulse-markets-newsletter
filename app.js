@@ -16,6 +16,8 @@
         REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes
     };
 
+    let currentHorizon = 'long'; // Default investment horizon (long or short)
+
     // ── Cache Manager ──
     const Cache = {
         get(key) {
