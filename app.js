@@ -105,7 +105,7 @@
         const headers = {};
         if (key) headers['x-cg-demo-api-key'] = key;
         const data = await fetchJSON(
-            `${CONFIG.COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=15&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`,
+            `${CONFIG.COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`,
             headers
         );
         Cache.set('crypto_markets', data);
@@ -637,9 +637,9 @@
             const cryptoMarkets = Cache.get('crypto_markets');
             let cryptoPricesCtx = 'No data';
             if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
-                cryptoPricesCtx = cryptoMarkets.slice(0, 12).map(c => 
-                    `- ${c.name} (${c.symbol.toUpperCase()}): Precio Actual = $${c.current_price.toLocaleString('en-US')}, ATH = $${c.ath.toLocaleString('en-US')}, Cambio Desde ATH = ${c.ath_change_percentage.toFixed(2)}%`
-                ).join('\n');
+                cryptoPricesCtx = cryptoMarkets.slice(0, 200).map(c => 
+                    `${c.name} (${c.symbol.toUpperCase()}): Pr=$${c.current_price}, ATH=$${c.ath}, CaATH=${c.ath_change_percentage.toFixed(1)}%`
+                ).join(' | ');
             }
 
             const currentDateStr = new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
