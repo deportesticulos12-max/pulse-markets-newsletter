@@ -753,6 +753,8 @@
             const fng = document.getElementById('m-fng').innerText;
             const riesgo = document.getElementById('m-riesgo').innerText;
 
+            const currentDateStr = new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
             const prompt = `Actúa como un analista financiero cuantitativo especializado en criptomonedas, macroeconomía y mercados globales. Tu objetivo es generar análisis precisos, profundos y accionables sobre Bitcoin (BTC), Ethereum (ETH), el ecosistema cripto y los mercados financieros globales.
 
 PRINCIPIO FUNDAMENTAL:
@@ -761,6 +763,7 @@ Debes realizar el análisis completo siguiendo la ESTRUCTURA OBLIGATORIA.
 Genera un análisis sintético, directo, basado en los siguientes datos en tiempo real de hoy. 
 
 DATOS ACTUALES DEL MERCADO:
+- Fecha del reporte: ${currentDateStr}
 - Precio BTC: ${btcPrice}
 - Índice Merval: ${mervalPrice}
 - Fear & Greed Index: ${fng}
@@ -769,8 +772,12 @@ DATOS ACTUALES DEL MERCADO:
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
 
+PAUTAS CRÍTICAS DE CONTEXTO:
+- En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
+- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes de alto nivel, tales como el conflicto o tensiones entre Estados Unidos e Irán, y cómo estas afectan la aversión al riesgo en los mercados globales, el precio de commodities como el petróleo y el comportamiento de refugio de activos como el oro o Bitcoin.
+
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
-1. CONTEXTO MACROECONÓMICO (Global y local)
+1. CONTEXTO MACROECONÓMICO (Global y local, incluyendo análisis de las tensiones geopolíticas entre EE.UU. e Irán si aplican al sentimiento general)
 2. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC y F&G)
 3. SENTIMIENTO DEL MERCADO
 4. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
