@@ -634,6 +634,14 @@
             const fng = document.getElementById('m-fng').innerText;
             const riesgo = document.getElementById('m-riesgo').innerText;
 
+            const cryptoMarkets = Cache.get('crypto_markets');
+            let cryptoPricesCtx = 'No data';
+            if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
+                cryptoPricesCtx = cryptoMarkets.slice(0, 12).map(c => 
+                    `- ${c.name} (${c.symbol.toUpperCase()}): Precio Actual = $${c.current_price.toLocaleString('en-US')}, ATH = $${c.ath.toLocaleString('en-US')}, Cambio Desde ATH = ${c.ath_change_percentage.toFixed(2)}%`
+                ).join('\n');
+            }
+
             const currentDateStr = new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
             const prompt = `Actúa como un analista financiero cuantitativo especializado en criptomonedas, macroeconomía y mercados globales. Tu objetivo es generar análisis precisos, profundos y accionables sobre Bitcoin (BTC), Ethereum (ETH), el ecosistema cripto y los mercados financieros globales.
@@ -649,6 +657,8 @@ DATOS ACTUALES DEL MERCADO:
 - Índice Merval: ${mervalPrice}
 - Fear & Greed Index: ${fng}
 - Riesgo País Argentina: ${riesgo}
+- Precios y Estadísticas reales de Criptomonedas hoy (CoinGecko):
+${cryptoPricesCtx}
 - Titulares Crypto hoy: ${cryptoNews}
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
@@ -794,7 +804,37 @@ FORMATO GENERAL:
                 const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
                 const badgeClass = opp.badge || 'buy';
                 const badgeText = opp.badgeText || 'Comprar';
-                const metricsHtml = (opp.metrics || []).map(m => `
+                
+                // Dynamically enforce actual real-time CoinGecko metrics for cryptocurrencies
+                let liveMetrics = opp.metrics || [];
+                if (containerId === 'crypto-opportunities') {
+                    const cryptoMarkets = Cache.get('crypto_markets');
+                    if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
+                        const coinData = cryptoMarkets.find(c => c.symbol.toLowerCase() === opp.symbol.toLowerCase());
+                        if (coinData) {
+                            let hasAth = false;
+                            liveMetrics = liveMetrics.map(m => {
+                                const labelLower = m.label.toLowerCase();
+                                if (labelLower.includes('ath') || labelLower.includes('máximo')) {
+                                    hasAth = true;
+                                    return {
+                                        label: 'Desde ATH',
+                                        value: formatPct(coinData.ath_change_percentage)
+                                    };
+                                }
+                                return m;
+                            });
+                            if (!hasAth) {
+                                liveMetrics.push({
+                                    label: 'Desde ATH',
+                                    value: formatPct(coinData.ath_change_percentage)
+                                });
+                            }
+                        }
+                    }
+                }
+
+                const metricsHtml = liveMetrics.map(m => `
                     <div class="opp-metric">
                         <div class="opp-metric-label">${m.label}</div>
                         <div class="opp-metric-value">${m.value}</div>
