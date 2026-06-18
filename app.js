@@ -582,7 +582,21 @@
         }
     }
 
-    // ── AI Analysis (Gemini) ──
+    function updateAITimestamp(ts) {
+        const span = document.getElementById('ai-report-timestamp');
+        if (span) {
+            if (ts) {
+                const date = new Date(ts);
+                const timeStr = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+                span.textContent = `(Actualizado: ${timeStr})`;
+                span.style.display = 'inline';
+            } else {
+                span.style.display = 'none';
+            }
+        }
+    }
+
+    // ── Generate AI Analysis via Gemini API ──
     async function generateDailyAnalysis(forceRefresh = false, targetHorizon = currentHorizon) {
         const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42SVNuQUdhRGtobTNNS2dhVFlpWDliek40eWFjY0xQZG1OYURwblVyNjNXVVE=');
         const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
@@ -624,6 +638,7 @@
                 } else {
                     renderStaticOpportunities();
                 }
+                updateAITimestamp(cachedAnalysis.ts);
             }
             return;
         }
@@ -786,19 +801,23 @@ FORMATO GENERAL:
             const match = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/);
             if (match && match[1]) {
                 try {
-                    parsedOpps = JSON.parse(match[1].trim());
+                    let jsonString = match[1].replace(/```json/gi, '').replace(/```/g, '').trim();
+                    parsedOpps = JSON.parse(jsonString);
                     // Remove JSON tag from main output markdown to keep it clean
                     cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/g, '').trim();
                 } catch (jsonErr) {
                     console.error("Failed to parse AI Opportunities JSON:", jsonErr);
+                    console.log("Raw JSON string was:", match[1]);
                 }
             }
 
+            const currentTimestamp = Date.now();
+            
             // Cache it for 1 hour to prevent spamming the API on every reload
-            Cache.set('ai_analysis_' + targetHorizon, { markdown: cleanMarkdown, opps: parsedOpps }, 3600000);
+            Cache.set('ai_analysis_' + targetHorizon, { markdown: cleanMarkdown, opps: parsedOpps, ts: currentTimestamp }, 3600000);
             
             // Also store a backup that NEVER expires to recover from quota errors
-            localStorage.setItem('pm_ai_analysis_backup_' + targetHorizon, JSON.stringify({ markdown: cleanMarkdown, opps: parsedOpps, ts: Date.now() }));
+            localStorage.setItem('pm_ai_analysis_backup_' + targetHorizon, JSON.stringify({ markdown: cleanMarkdown, opps: parsedOpps, ts: currentTimestamp }));
 
             if (targetHorizon === currentHorizon) {
                 container.innerHTML = marked.parse(cleanMarkdown);
@@ -807,6 +826,7 @@ FORMATO GENERAL:
                 } else {
                     renderStaticOpportunities();
                 }
+                updateAITimestamp(currentTimestamp);
             }
             
         } catch (error) {
@@ -833,6 +853,7 @@ FORMATO GENERAL:
                     } else {
                         renderStaticOpportunities();
                     }
+                    updateAITimestamp(backup.ts);
                     return;
                 }
             } catch (e) {
@@ -881,7 +902,8 @@ FORMATO GENERAL:
             parentContainer.appendChild(container);
 
             container.innerHTML = oppsList.map(opp => {
-                const chartId = `chart-${containerId}-${currentHorizon}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                const symbolSafe = (opp.symbol || opp.tvSymbol || 'unknown').replace(/[^a-zA-Z0-9]/g, '-');
+                const chartId = `chart-${containerId}-${currentHorizon}-${symbolSafe}`;
                 const badgeClass = opp.badge || 'buy';
                 const badgeText = opp.badgeText || 'Comprar';
                 
@@ -945,8 +967,9 @@ FORMATO GENERAL:
                 `;
             }).join('');
 
-            oppsList.forEach(opp => {
-                const chartId = `chart-${containerId}-${currentHorizon}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                oppsList.forEach(opp => {
+                const symbolSafe = (opp.symbol || opp.tvSymbol || 'unknown').replace(/[^a-zA-Z0-9]/g, '-');
+                const chartId = `chart-${containerId}-${currentHorizon}-${symbolSafe}`;
                 const chartEl = document.getElementById(chartId);
                 if (!chartEl) return;
                 const widgetContainer = chartEl.querySelector('.tradingview-widget-container');

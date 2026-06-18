@@ -1,0 +1,6 @@
+@echo off
+echo Subiendo codigo a GitHub...
+"C:\Program Files\Git\cmd\git.exe" push -u origin main
+echo.
+echo Presiona cualquier tecla para salir...
+pause >nul
