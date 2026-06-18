@@ -886,6 +886,19 @@ FORMATO GENERAL:
                     renderAIOpportunities(parsedOpps);
                 } else {
                     console.warn('[PulseMarkets] AI returned no valid opportunities JSON, showing static fallback');
+                    
+                    // Show debug info to user
+                    const debugDiv = document.createElement('div');
+                    debugDiv.style.marginTop = '20px';
+                    debugDiv.style.padding = '10px';
+                    debugDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+                    debugDiv.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+                    debugDiv.style.borderRadius = '8px';
+                    debugDiv.style.fontSize = '0.75rem';
+                    debugDiv.style.color = '#fca5a5';
+                    debugDiv.innerHTML = `<strong>Error interno de IA (Oportunidades):</strong> No se pudo procesar el formato de la IA.<br>Por favor captura una captura de pantalla de esto para el soporte:<br><pre style="white-space: pre-wrap; margin-top: 10px; max-height: 150px; overflow-y: auto;">${(jsonRaw || textResponse.substring(textResponse.length - 400)).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;
+                    container.appendChild(debugDiv);
+                    
                     renderStaticOpportunities();
                 }
                 updateAITimestamp(currentTimestamp);
