@@ -666,6 +666,11 @@ ${cryptoPricesCtx}
 
 PAUTAS CRÍTICAS DE CONTEXTO:
 - En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
+- REGLAS DE LARGO PLAZO (VALUACIÓN DE VALOR Y FUNDAMENTALES): Si el Horizonte Temporal Solicitado es LARGO PLAZO, la justificación ("reason") y análisis de cada oportunidad cripto debe evaluar estrictamente:
+  1) El suministro de tokens (Total Supply vs Max Supply), especificando si ya alcanzó su límite máximo o si existe riesgo de dilución por emisiones futuras.
+  2) Próximas actualizaciones tecnológicas programadas en su roadmap y cómo afectarán su ecosistema en cuanto a escalabilidad, seguridad o descentralización.
+  3) Grado de adopción institucional (adquisición por tesorerías corporativas, fondos de inversión regulados o flujos en ETFs).
+  4) Indicadores fundamentales clave de previsión de valor como el MVRV Ratio (para evaluar sobreventa/sobrecompra histórica), Ley de Metcalfe (direcciones activas y crecimiento de red), ratio NVT o niveles de soporte macroeconómicos históricos.
 - REGLA DE REALISMO ABSOLUTO: Queda terminantemente PROHIBIDO usar lenguaje de simulación, descargos de responsabilidad ("no tengo datos en tiempo real", "este es un escenario hipotético", "se simula") o excusas sobre limitaciones de navegación. Debes asumir que los datos de precios proveídos arriba y la información que deduzcas de los titulares RSS (como Cointelegraph e Investing.com) son los hechos reales y actuales del día. Redacta el informe con tono analítico profesional firme y 100% seguro.
 - Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel (por ejemplo, tensiones entre EE.UU. e Irán, guerras comerciales, conflictos en Europa, etc.) basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
