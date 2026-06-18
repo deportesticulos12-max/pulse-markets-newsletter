@@ -435,6 +435,9 @@
                     <div class="fng-detail-item"><span class="fng-detail-label">Rango</span><span class="fng-detail-value">0 (Miedo Extremo) → 100 (Codicia Extrema)</span></div>
                     <div class="fng-detail-item"><span class="fng-detail-label">Interpretación</span><span class="fng-detail-value">${score <= 25 ? 'Posible oportunidad de compra' : score <= 50 ? 'Mercado cauto, monitorear' : score <= 75 ? 'Mercado optimista, cautela en nuevas posiciones' : 'Mercado eufórico, considerar tomar ganancias'}</span></div>
                     <div class="fng-detail-item"><span class="fng-detail-label">Fuente</span><span class="fng-detail-value">FearGreedChart.com</span></div>
+                </div>
+            `;
+        } catch (e) {
             console.error('Fear & Greed error:', e);
             document.getElementById('fng-display').innerHTML = '<div class="error-state"><div class="error-icon">📊</div><p>No se pudo cargar el Fear & Greed Index</p></div>';
             document.getElementById('m-fng').textContent = '—';
