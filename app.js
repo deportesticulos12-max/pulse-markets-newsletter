@@ -445,210 +445,7 @@
         }
     }
 
-    // ── Render: Opportunities ──
-    let currentHorizon = 'long'; // Default investment horizon
 
-    function renderOpportunities() {
-        const opportunities = {
-            long: {
-                argentina: [
-                    {
-                        symbol: 'BCBA:SUPV', name: 'Grupo Supervielle', tvSymbol: 'BCBA:SUPV',
-                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                        metrics: [{ label: 'P/E Ratio', value: '5.2x' }, { label: 'P/BV', value: '0.8x' }, { label: 'Sector', value: 'Bancario' }, { label: 'Tipo', value: 'Value Play' }],
-                        reason: '<strong>Fundamento:</strong> Cotiza con descuento significativo respecto a su valor libro. El sector bancario argentino se beneficia de la normalización monetaria a largo plazo. ROE elevado y crecimiento sostenido.'
-                    },
-                    {
-                        symbol: 'BCBA:CEPU', name: 'Central Puerto', tvSymbol: 'BCBA:CEPU',
-                        badge: 'buy', badgeText: 'Comprar',
-                        metrics: [{ label: 'P/E Ratio', value: '6.8x' }, { label: 'Div. Yield', value: '4.2%' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Dividendos' }],
-                        reason: '<strong>Fundamento:</strong> Empresa energética con flujo de caja extremadamente sólido y dividendos recurrentes atractivos. Ideal para carteras de acumulación.'
-                    },
-                    {
-                        symbol: 'BCBA:ALUA', name: 'Aluar Aluminio', tvSymbol: 'BCBA:ALUA',
-                        badge: 'buy', badgeText: 'Comprar',
-                        metrics: [{ label: 'P/E Ratio', value: '4.5x' }, { label: 'P/BV', value: '0.65x' }, { label: 'Sector', value: 'Materiales' }, { label: 'Tipo', value: 'Value + Export' }],
-                        reason: '<strong>Fundamento:</strong> Empresa exportadora neta subvaluada con activos físicos de alto valor. Cobertura perfecta de largo plazo contra devaluación de la moneda.'
-                    }
-                ],
-                usa: [
-                    {
-                        symbol: 'GOOGL', name: 'Alphabet Inc.', tvSymbol: 'NASDAQ:GOOGL',
-                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                        metrics: [{ label: 'P/E Forward', value: '18.5x' }, { label: 'PEG Ratio', value: '0.92' }, { label: 'Sector', value: 'Tech / IA' }, { label: 'Tipo', value: 'Growth' }],
-                        reason: '<strong>Fundamento:</strong> Líder indiscutido en IA y búsquedas globales. Excelente generación de caja libre e inversión masiva en centros de datos a largo plazo.'
-                    },
-                    {
-                        symbol: 'TSM', name: 'Taiwan Semiconductor', tvSymbol: 'NYSE:TSM',
-                        badge: 'buy', badgeText: 'Comprar',
-                        metrics: [{ label: 'P/E Forward', value: '22x' }, { label: 'Revenue Growth', value: '+36% YoY' }, { label: 'Sector', value: 'Semiconductors' }, { label: 'Tipo', value: 'Monopoly Play' }],
-                        reason: '<strong>Fundamento:</strong> Columna vertebral tecnológica mundial. Monopolio en manufactura de silicio para chips de IA. Crecimiento garantizado en la próxima década.'
-                    },
-                    {
-                        symbol: 'AMZN', name: 'Amazon.com', tvSymbol: 'NASDAQ:AMZN',
-                        badge: 'buy', badgeText: 'Comprar',
-                        metrics: [{ label: 'P/E Forward', value: '28x' }, { label: 'AWS Growth', value: '+19% YoY' }, { label: 'Sector', value: 'Tech / Cloud' }, { label: 'Tipo', value: 'Platform Play' }],
-                        reason: '<strong>Fundamento:</strong> El negocio Cloud (AWS) y el área de Publicidad Digital expanden márgenes de manera persistente año a año.'
-                    }
-                ],
-                crypto: [
-                    {
-                        symbol: 'LINK', name: 'Chainlink', tvSymbol: 'BINANCE:LINKUSDT',
-                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                        metrics: [{ label: 'Sector', value: 'Oracles / RWA' }, { label: 'Adopción', value: '75% DeFi' }, { label: 'Tipo', value: 'Infraestructura' }, { label: 'Desde ATH', value: '~-57%' }],
-                        reason: '<strong>Fundamento:</strong> Oráculo monopolista clave para la tokenización institucional de activos (RWA) a largo plazo. Su tecnología CCIP es el estándar interbancario.'
-                    },
-                    {
-                        symbol: 'ADA', name: 'Cardano', tvSymbol: 'BINANCE:ADAUSDT',
-                        badge: 'buy', badgeText: 'Comprar',
-                        metrics: [{ label: 'Sector', value: 'L1 Blockchain' }, { label: 'Governance', value: 'On-chain' }, { label: 'Tipo', value: 'Ecosystem Play' }, { label: 'Desde ATH', value: '~-64%' }],
-                        reason: '<strong>Fundamento:</strong> Enfoque académico y seguridad matemática insuperable. Gobernanza 100% descentralizada ideal para resguardar valor por años.'
-                    },
-                    {
-                        symbol: 'AVAX', name: 'Avalanche', tvSymbol: 'BINANCE:AVAXUSDT',
-                        badge: 'speculative', badgeText: 'Especulativo',
-                        metrics: [{ label: 'Sector', value: 'L1 + Subnets' }, { label: 'Partnerships', value: 'JP Morgan, Citi' }, { label: 'Tipo', value: 'Institutional DeFi' }, { label: 'Desde ATH', value: '~-67%' }],
-                        reason: '<strong>Fundamento:</strong> Su infraestructura de subredes personalizadas es la favorita de Wall Street para el procesamiento institucional de transacciones.'
-                    }
-                ]
-            },
-            short: {
-                argentina: [
-                    {
-                        symbol: 'BCBA:GGAL', name: 'Grupo Financiero Galicia', tvSymbol: 'BCBA:GGAL',
-                        badge: 'speculative', badgeText: 'Trading / Momentum',
-                        metrics: [{ label: 'Volatilidad', value: 'Alta' }, { label: 'Beta vs Merval', value: '1.25' }, { label: 'Sector', value: 'Bancario' }, { label: 'Tipo', value: 'Momentum' }],
-                        reason: '<strong>Trading:</strong> Activo de alta liquidez ideal para especulación de corto plazo. Presenta fuerte momentum alcista con volumen creciente.'
-                    },
-                    {
-                        symbol: 'BCBA:YPFD', name: 'YPF S.A.', tvSymbol: 'BCBA:YPFD',
-                        badge: 'buy', badgeText: 'Comprar Corto',
-                        metrics: [{ label: 'RSI (14)', value: '38 (Cerca Sobrevendido)' }, { label: 'Soporte', value: 'ARS 28.500' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Rebote Técnico' }],
-                        reason: '<strong>Trading:</strong> YPF muestra una corrección de corto plazo hacia la media de 50 días. Oportunidad de entrada para capturar rebote técnico inminente.'
-                    },
-                    {
-                        symbol: 'BCBA:PAMP', name: 'Pampa Energía', tvSymbol: 'BCBA:PAMP',
-                        badge: 'buy', badgeText: 'Comprar Corto',
-                        metrics: [{ label: 'RSI (14)', value: '45 (Neutral)' }, { label: 'Vol. 24h', value: 'Muy Alto' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Ruptura (Breakout)' }],
-                        reason: '<strong>Trading:</strong> Consolidando patrón de bandera alcista en velas de 4 horas. Excelente relación riesgo/beneficio para una operación de 1-2 semanas.'
-                    }
-                ],
-                usa: [
-                    {
-                        symbol: 'NVDA', name: 'NVIDIA Corp.', tvSymbol: 'NASDAQ:NVDA',
-                        badge: 'speculative', badgeText: 'Trading Rápido',
-                        metrics: [{ label: 'RSI (14)', value: '68 (Alto)' }, { label: 'Volatilidad', value: 'Extrema' }, { label: 'Sector', value: 'Tech / Chips' }, { label: 'Tipo', value: 'Momentum / Swing' }],
-                        reason: '<strong>Trading:</strong> El líder de chips de IA muestra una volatilidad ideal para operaciones intradía o swing trading de 3-5 días tras la presentación de balances.'
-                    },
-                    {
-                        symbol: 'TSLA', name: 'Tesla Inc.', tvSymbol: 'NASDAQ:TSLA',
-                        badge: 'speculative', badgeText: 'Trading / Swing',
-                        metrics: [{ label: 'RSI (14)', value: '32 (Sobrevendido)' }, { label: 'Beta', value: '1.85' }, { label: 'Sector', value: 'Automotriz / IA' }, { label: 'Tipo', value: 'Reversión (Mean Reversion)' }],
-                        reason: '<strong>Trading:</strong> Fuerte sobreventa tras rumores regulatorios. Excelente oportunidad de swing trading buscando un testeo de la resistencia superior.'
-                    },
-                    {
-                        symbol: 'COIN', name: 'Coinbase Global', tvSymbol: 'NASDAQ:COIN',
-                        badge: 'speculative', badgeText: 'Trading / Beta',
-                        metrics: [{ label: 'Beta vs BTC', value: '2.10' }, { label: 'RSI (14)', value: '55 (Neutral)' }, { label: 'Sector', value: 'Fintech / Crypto' }, { label: 'Tipo', value: 'High Beta Play' }],
-                        reason: '<strong>Trading:</strong> Proxy regulado de alta volatilidad. Ideal para maximizar ganancias de corto plazo apalancándose de los movimientos direccionales de Bitcoin.'
-                    }
-                ],
-                crypto: [
-                    {
-                        symbol: 'SOL', name: 'Solana', tvSymbol: 'BINANCE:SOLUSDT',
-                        badge: 'strong-buy', badgeText: 'Momentum',
-                        metrics: [{ label: 'RSI (14)', value: '38 (Cerca Sobrevendido)' }, { label: 'Vol. 24h', value: '$1.8B' }, { label: 'Tipo', value: 'Soporte Clave' }, { label: 'Desde ATH', value: '~-73%' }],
-                        reason: '<strong>Trading:</strong> Tras retroceder hacia la zona de soporte psicológico de $68-$70, muestra rechazo a seguir bajando. Target técnico de corto plazo en $78-$80 buscando un rebote rápido.'
-                    },
-                    {
-                        symbol: 'WIF', name: 'dogwifhat', tvSymbol: 'BINANCE:WIFUSDT',
-                        badge: 'speculative', badgeText: 'Especulación Alta',
-                        metrics: [{ label: 'Beta vs SOL', value: '2.40' }, { label: 'RSI (14)', value: '41 (Cerca Sobrevendido)' }, { label: 'Tipo', value: 'Memecoin Swing' }, { label: 'Volatilidad', value: 'Extrema' }],
-                        reason: '<strong>Trading:</strong> Activo de altísima especulación. Ideal para swing trading buscando rebotes rápidos aprovechando la fuerte liquidez de la red Solana.'
-                    },
-                    {
-                        symbol: 'NEAR', name: 'Near Protocol', tvSymbol: 'BINANCE:NEARUSDT',
-                        badge: 'buy', badgeText: 'Comprar Corto',
-                        metrics: [{ label: 'Sector', value: 'L1 + AI' }, { label: 'RSI (14)', value: '35 (Sobrevendido)' }, { label: 'Tipo', value: 'Reversión' }, { label: 'Desde ATH', value: '~-71%' }],
-                        reason: '<strong>Trading:</strong> Compresión de volatilidad cerca de soporte mayor histórico. Estocástico marcando sobreventa con divergencia alcista en temporalidad diaria.'
-                    }
-                ]
-            }
-        };
-
-        const activeOpps = opportunities[currentHorizon];
-
-        function renderOppGrid(containerId, opps) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            container.innerHTML = opps.map(opp => {
-                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
-                return `
-                    <div class="opportunity-card">
-                        <div class="opp-mini-chart" id="${chartId}">
-                            <div class="tradingview-widget-container">
-                                <div class="tradingview-widget-container__widget"></div>
-                            </div>
-                        </div>
-                        <div class="opp-content">
-                            <div class="opp-header">
-                                <div>
-                                    <div class="opp-symbol">${opp.symbol}</div>
-                                    <div class="opp-name">${opp.name}</div>
-                                </div>
-                                <span class="opp-badge ${opp.badge}">${opp.badgeText}</span>
-                            </div>
-                            <div class="opp-metrics">
-                                ${opp.metrics.map(m => `<div class="opp-metric"><div class="opp-metric-label">${m.label}</div><div class="opp-metric-value">${m.value}</div></div>`).join('')}
-                            </div>
-                            <div class="opp-reason">${opp.reason}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Programmatically load TradingView widgets
-            opps.forEach(opp => {
-                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
-                const chartEl = document.getElementById(chartId);
-                if (!chartEl) return;
-                const widgetContainer = chartEl.querySelector('.tradingview-widget-container');
-                if (!widgetContainer) return;
-                const script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-                script.async = true;
-                script.text = JSON.stringify({
-                    "symbol": opp.tvSymbol,
-                    "width": "100%",
-                    "height": "100%",
-                    "locale": "es",
-                    "dateRange": "1M",
-                    "colorTheme": "dark",
-                    "isTransparent": true,
-                    "autosize": true,
-                    "largeChartUrl": "",
-                    "noTimeScale": false
-                });
-                widgetContainer.appendChild(script);
-            });
-        }
-
-        renderOppGrid('arg-opportunities', activeOpps.argentina);
-        renderOppGrid('us-opportunities', activeOpps.usa);
-        renderOppGrid('crypto-opportunities', activeOpps.crypto);
-    }
-
-    // Bind Toggle Switch
-    document.querySelectorAll('.horizon-toggle').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            currentHorizon = e.target.dataset.horizon;
-            document.querySelectorAll('.horizon-toggle').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            renderOpportunities();
-        });
-    });
 
     // ── Render: News (RSS) ──
     async function loadNewsFeed(rssUrl, containerId, cacheKey, errorMsg) {
@@ -847,6 +644,7 @@ DATOS ACTUALES DEL MERCADO:
 - Titulares Crypto hoy: ${cryptoNews}
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
+- Horizonte Temporal Solicitado: ${currentHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
 
 PAUTAS CRÍTICAS DE CONTEXTO:
 - En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
@@ -864,6 +662,28 @@ ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un das
 5. SENTIMIENTO DEL MERCADO
 6. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
 7. RECOMENDACIONES TÁCTICAS
+
+OPORTUNIDADES DIVERSIFICADAS (SECCIÓN ESPECIAL AL FINAL DEL JSON):
+Debes proponer exactamente 3 oportunidades por categoría de activos acorde al Horizonte Temporal solicitado (${currentHorizon === 'short' ? 'Corto Plazo: especulación de 1-14 días, alta volatilidad' : 'Largo Plazo: acumulación de valor, fundamentos sólidos'}):
+- Categoría 1: **Criptomonedas** (Ej: BTC, ETH, SOL, altcoins líquidas)
+- Categoría 2: **Acciones EE.UU.** (Ej: NVIDIA, Tesla, Google, Apple, etc.)
+- Categoría 3: **Acciones Argentinas** (Ej: GGAL, YPF, PAMP, SUPV, ALUA, etc.)
+
+IMPORTANTE: Los precios objetivos (targets) de corto plazo de las criptos deben ser realistas en relación a su cotización real actual (por ejemplo, si SOL cotiza en $70, un target de corto plazo coherente es $78-$82, jamás pongas targets desproporcionados como $180 en corto plazo).
+
+Al final de tu respuesta, debes incluir una sección JSON estricta y delimitada por etiquetas XML <opps_json>...</opps_json> para que el sistema procese y renderice dinámicamente estas oportunidades en las tarjetas interactivas de TradingView de la web.
+Usa exactamente esta estructura JSON dentro de las etiquetas:
+{
+  "crypto": [
+    { "symbol": "SOL", "name": "Solana", "tvSymbol": "BINANCE:SOLUSDT", "badge": "strong-buy", "badgeText": "Compra Fuerte", "metrics": [{"label": "RSI (14)", "value": "38"}, {"label": "Desde ATH", "value": "-73%"}], "reason": "Razón fundamental/técnica adaptada al horizonte." }
+  ],
+  "usa": [
+    { "symbol": "NVDA", "name": "NVIDIA Corp.", "tvSymbol": "NASDAQ:NVDA", "badge": "speculative", "badgeText": "Trading", "metrics": [{"label": "Volatilidad", "value": "Alta"}], "reason": "Razón adaptada." }
+  ],
+  "argentina": [
+    { "symbol": "BCBA:GGAL", "name": "Grupo Galicia", "tvSymbol": "BCBA:GGAL", "badge": "buy", "badgeText": "Comprar", "metrics": [{"label": "Beta", "value": "1.25"}], "reason": "Razón adaptada." }
+  ]
+}
 
 FORMATO GENERAL:
 - Utiliza Markdown para la estructura (títulos H2, listas, negritas).
@@ -911,21 +731,167 @@ FORMATO GENERAL:
             }
 
             const data = await response.json();
-            const markdownText = data.candidates[0].content.parts[0].text;
+            const textResponse = data.candidates[0].content.parts[0].text;
             
+            // Extract Markdown and JSON
+            let cleanMarkdown = textResponse;
+            let parsedOpps = null;
+            
+            const match = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/);
+            if (match && match[1]) {
+                try {
+                    parsedOpps = JSON.parse(match[1].trim());
+                    // Remove JSON tag from main output markdown to keep it clean
+                    cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/g, '').trim();
+                } catch (jsonErr) {
+                    console.error("Failed to parse AI Opportunities JSON:", jsonErr);
+                }
+            }
+
             // Cache it for 1 hour to prevent spamming the API on every reload
-            Cache.set('ai_analysis', markdownText, 3600000);
+            Cache.set('ai_analysis_' + currentHorizon, { markdown: cleanMarkdown, opps: parsedOpps }, 3600000);
             
-            container.innerHTML = marked.parse(markdownText);
+            container.innerHTML = marked.parse(cleanMarkdown);
+            if (parsedOpps) {
+                renderAIOpportunities(parsedOpps);
+            } else {
+                renderStaticOpportunities();
+            }
             
         } catch (error) {
             console.error("AI Generation Error:", error);
             container.innerHTML = `
                 <div class="api-key-missing">
                     <p style="color: #ef4444;">Error al generar el reporte: ${error.message}</p>
-                    <button onclick="localStorage.removeItem('pm_ai_analysis'); generateDailyAnalysis();">Reintentar</button>
+                    <button onclick="localStorage.removeItem('pm_ai_analysis_long'); localStorage.removeItem('pm_ai_analysis_short'); generateDailyAnalysis();">Reintentar</button>
                 </div>
             `;
+            renderStaticOpportunities();
+        }
+    }
+
+    // ── Render Dynamic Opportunities from Gemini ──
+    function renderAIOpportunities(opps) {
+        function renderOppGrid(containerId, oppsList) {
+            const container = document.getElementById(containerId);
+            if (!container || !oppsList || oppsList.length === 0) return;
+
+            container.innerHTML = oppsList.map(opp => {
+                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                const badgeClass = opp.badge || 'buy';
+                const badgeText = opp.badgeText || 'Comprar';
+                const metricsHtml = (opp.metrics || []).map(m => `
+                    <div class="opp-metric">
+                        <div class="opp-metric-label">${m.label}</div>
+                        <div class="opp-metric-value">${m.value}</div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="opportunity-card">
+                        <div class="opp-mini-chart" id="${chartId}">
+                            <div class="tradingview-widget-container">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                        <div class="opp-content">
+                            <div class="opp-header">
+                                <div>
+                                    <div class="opp-symbol">${opp.symbol}</div>
+                                    <div class="opp-name">${opp.name}</div>
+                                </div>
+                                <span class="opp-badge ${badgeClass}">${badgeText}</span>
+                            </div>
+                            <div class="opp-metrics">
+                                ${metricsHtml}
+                            </div>
+                            <div class="opp-reason">${opp.reason}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            oppsList.forEach(opp => {
+                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                const chartEl = document.getElementById(chartId);
+                if (!chartEl) return;
+                const widgetContainer = chartEl.querySelector('.tradingview-widget-container');
+                if (!widgetContainer) return;
+
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+                script.async = true;
+                script.text = JSON.stringify({
+                    "symbol": opp.tvSymbol || opp.symbol,
+                    "width": "100%",
+                    "height": "100%",
+                    "locale": "es",
+                    "dateRange": "1M",
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "autosize": true,
+                    "largeChartUrl": "",
+                    "noTimeScale": false
+                });
+                widgetContainer.appendChild(script);
+            });
+        }
+
+        renderOppGrid('crypto-opportunities', opps.crypto);
+        renderOppGrid('us-opportunities', opps.usa);
+        renderOppGrid('arg-opportunities', opps.argentina);
+    }
+
+    // ── Fallback/Static opportunities (Original lists if AI fails or hasn't run) ──
+    function renderStaticOpportunities() {
+        const fallbackOpps = {
+            long: {
+                crypto: [
+                    { symbol: 'LINK', name: 'Chainlink', tvSymbol: 'BINANCE:LINKUSDT', badge: 'strong-buy', badgeText: 'Compra Fuerte', metrics: [{ label: 'Sector', value: 'Oracles / RWA' }, { label: 'Desde ATH', value: '~-57%' }], reason: 'Oráculo monopolista clave para la tokenización de activos en la blockchain.' },
+                    { symbol: 'ADA', name: 'Cardano', tvSymbol: 'BINANCE:ADAUSDT', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'Sector', value: 'L1 Chain' }, { label: 'Desde ATH', value: '~-64%' }], reason: 'Gobernanza descentralizada segura y desarrollo robusto.' },
+                    { symbol: 'AVAX', name: 'Avalanche', tvSymbol: 'BINANCE:AVAXUSDT', badge: 'speculative', badgeText: 'Especulativo', metrics: [{ label: 'Sector', value: 'L1 + Subnets' }, { label: 'Desde ATH', value: '~-67%' }], reason: 'La blockchain elegida por las grandes instituciones financieras.' }
+                ],
+                usa: [
+                    { symbol: 'GOOGL', name: 'Alphabet Inc.', tvSymbol: 'NASDAQ:GOOGL', badge: 'strong-buy', badgeText: 'Compra Fuerte', metrics: [{ label: 'P/E Forward', value: '18.5x' }, { label: 'Sector', value: 'Tech / IA' }], reason: 'Líder tecnológico en IA y búsquedas globales con valuación descontada.' },
+                    { symbol: 'TSM', name: 'Taiwan Semiconductor', tvSymbol: 'NYSE:TSM', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'P/E Forward', value: '22x' }, { label: 'Sector', value: 'Semiconductors' }], reason: 'Fabricante exclusivo de silicio avanzado para procesadores de IA.' },
+                    { symbol: 'AMZN', name: 'Amazon.com', tvSymbol: 'NASDAQ:AMZN', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'P/E Forward', value: '28x' }, { label: 'AWS Growth', value: '+19%' }], reason: 'Márgenes de ganancia en expansión gracias a la nube (AWS) y publicidad.' }
+                ],
+                argentina: [
+                    { symbol: 'BCBA:SUPV', name: 'Grupo Supervielle', tvSymbol: 'BCBA:SUPV', badge: 'strong-buy', badgeText: 'Compra Fuerte', metrics: [{ label: 'P/E Ratio', value: '5.2x' }, { label: 'P/BV', value: '0.8x' }], reason: 'Banco con el descuento contable más significativo en el sector financiero argentino.' },
+                    { symbol: 'BCBA:CEPU', name: 'Central Puerto', tvSymbol: 'BCBA:CEPU', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'P/E Ratio', value: '6.8x' }, { label: 'Div. Yield', value: '4.2%' }], reason: 'Generadora de energía con fuerte flujo de caja y dividendos recurrentes.' },
+                    { symbol: 'BCBA:ALUA', name: 'Aluar Aluminio', tvSymbol: 'BCBA:ALUA', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'P/E Ratio', value: '4.5x' }, { label: 'P/BV', value: '0.65x' }], reason: 'Exportador neto de aluminio subvaluado y cobertura contra la devaluación local.' }
+                ]
+            },
+            short: {
+                crypto: [
+                    { symbol: 'SOL', name: 'Solana', tvSymbol: 'BINANCE:SOLUSDT', badge: 'strong-buy', badgeText: 'Momentum', metrics: [{ label: 'RSI (14)', value: '38' }, { label: 'Soporte', value: '$68-$70' }], reason: 'Tras tocar soporte de $68-$70 muestra fuerza compradora. Rebote rápido técnico proyectado.' },
+                    { symbol: 'WIF', name: 'dogwifhat', tvSymbol: 'BINANCE:WIFUSDT', badge: 'speculative', badgeText: 'Swing', metrics: [{ label: 'Beta vs SOL', value: '2.40' }, { label: 'RSI (14)', value: '41' }], reason: 'Activo especulativo para swing trading rápido aprovechando liquidez de la red.' },
+                    { symbol: 'NEAR', name: 'Near Protocol', tvSymbol: 'BINANCE:NEARUSDT', badge: 'buy', badgeText: 'Comprar', metrics: [{ label: 'Sector', value: 'L1 + AI' }, { label: 'RSI (14)', value: '35' }], reason: 'RSI comprimido en zona de soporte. Ideal para una reversión a la media en 1-2 semanas.' }
+                ],
+                usa: [
+                    { symbol: 'NVDA', name: 'NVIDIA Corp.', tvSymbol: 'NASDAQ:NVDA', badge: 'speculative', badgeText: 'Trading', metrics: [{ label: 'RSI (14)', value: '68' }, { label: 'Volatilidad', value: 'Alta' }], reason: 'Excelente volatilidad y volumen de negociación para capturar movimientos intradiarios.' },
+                    { symbol: 'TSLA', name: 'Tesla Inc.', tvSymbol: 'NASDAQ:TSLA', badge: 'speculative', badgeText: 'Swing', metrics: [{ label: 'RSI (14)', value: '32' }, { label: 'Beta', value: '1.85' }], reason: 'Oportunidad de rebote técnico por sobreventa tras corregir a la media.' },
+                    { symbol: 'COIN', name: 'Coinbase Global', tvSymbol: 'NASDAQ:COIN', badge: 'speculative', badgeText: 'High Beta', metrics: [{ label: 'Beta vs BTC', value: '2.10' }, { label: 'RSI (14)', value: '55' }], reason: 'Proxy ideal de apalancamiento regulado frente a los movimientos de Bitcoin.' }
+                ],
+                argentina: [
+                    { symbol: 'BCBA:GGAL', name: 'Grupo Financiero Galicia', tvSymbol: 'BCBA:GGAL', badge: 'speculative', badgeText: 'Momentum', metrics: [{ label: 'Volatilidad', value: 'Alta' }, { label: 'Beta', value: '1.25' }], reason: 'El papel de mayor liquidez local, ideal para trading especulativo rápido.' },
+                    { symbol: 'BCBA:YPFD', name: 'YPF S.A.', tvSymbol: 'BCBA:YPFD', badge: 'buy', badgeText: 'Rebote', metrics: [{ label: 'RSI (14)', value: '38' }, { label: 'Soporte', value: 'ARS 28.500' }], reason: 'Corrección de corto plazo hacia soporte dinámico. Oportunidad de entrada para swing.' },
+                    { symbol: 'BCBA:PAMP', name: 'Pampa Energía', tvSymbol: 'BCBA:PAMP', badge: 'buy', badgeText: 'Breakout', metrics: [{ label: 'RSI (14)', value: '45' }, { label: 'Patrón', value: 'Bandera' }], reason: 'Compresión en velas de 4 horas. Rompiendo resistencia para iniciar tramo alcista corto.' }
+                ]
+            }
+        };
+        renderAIOpportunities(fallbackOpps[currentHorizon]);
+    }
+
+    // ── Render opportunities router ──
+    function renderOpportunities() {
+        const cached = Cache.get('ai_analysis_' + currentHorizon);
+        if (cached && cached.opps) {
+            renderAIOpportunities(cached.opps);
+        } else {
+            // Re-run AI analysis if not cached, or show static fallback
+            renderStaticOpportunities();
         }
     }
 
