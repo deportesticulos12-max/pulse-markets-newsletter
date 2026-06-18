@@ -705,11 +705,12 @@
 
     // ── Navigation ──
     function setupNavigation() {
-        const tabs = document.querySelectorAll('.nav-tab');
+        const tabs = document.querySelectorAll('.nav-tabs .nav-tab');
         const sections = document.querySelectorAll('.content-section');
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.dataset.section;
+                if (!target) return; // Ignore if not a navigation tab
                 tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 sections.forEach(s => {
