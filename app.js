@@ -780,6 +780,12 @@ FORMATO GENERAL:
 
     // ── Render Dynamic Opportunities from Gemini ──
     function renderAIOpportunities(opps) {
+        // Clear containers first to avoid mixing old and new content
+        ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '';
+        });
+
         function renderOppGrid(containerId, oppsList) {
             const container = document.getElementById(containerId);
             if (!container || !oppsList || oppsList.length === 0) return;
