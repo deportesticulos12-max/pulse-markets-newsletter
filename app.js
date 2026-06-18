@@ -605,6 +605,12 @@
             localStorage.removeItem('pm_ai_analysis_short');
             localStorage.removeItem('pm_ai_analysis_backup_long');
             localStorage.removeItem('pm_ai_analysis_backup_short');
+            
+            // Clear DOM sub-containers to force re-render of new TradingView widgets
+            ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = '';
+            });
         }
         
         const cachedAnalysis = Cache.get('ai_analysis_' + currentHorizon);
@@ -837,18 +843,35 @@ FORMATO GENERAL:
 
     // ── Render Dynamic Opportunities from Gemini ──
     function renderAIOpportunities(opps) {
-        // Clear containers first to avoid mixing old and new content
-        ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = '';
-        });
-
         function renderOppGrid(containerId, oppsList) {
-            const container = document.getElementById(containerId);
-            if (!container || !oppsList || oppsList.length === 0) return;
+            const parentContainer = document.getElementById(containerId);
+            if (!parentContainer || !oppsList || oppsList.length === 0) return;
+
+            // Remove grid class from parent so it acts as a wrapper
+            parentContainer.classList.remove('opportunities-grid');
+
+            // Hide all existing horizon sub-containers
+            Array.from(parentContainer.children).forEach(child => child.style.display = 'none');
+
+            // Check if we already rendered this horizon's grid
+            const subContainerId = `${containerId}-${currentHorizon}`;
+            let container = document.getElementById(subContainerId);
+
+            if (container) {
+                // DOM is cached, just show it and avoid reloading widgets
+                container.style.display = 'grid';
+                return;
+            }
+
+            // Create new sub-container
+            container = document.createElement('div');
+            container.id = subContainerId;
+            container.className = 'opportunities-grid';
+            container.style.display = 'grid';
+            parentContainer.appendChild(container);
 
             container.innerHTML = oppsList.map(opp => {
-                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                const chartId = `chart-${containerId}-${currentHorizon}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
                 const badgeClass = opp.badge || 'buy';
                 const badgeText = opp.badgeText || 'Comprar';
                 
@@ -913,7 +936,7 @@ FORMATO GENERAL:
             }).join('');
 
             oppsList.forEach(opp => {
-                const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                const chartId = `chart-${containerId}-${currentHorizon}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
                 const chartEl = document.getElementById(chartId);
                 if (!chartEl) return;
                 const widgetContainer = chartEl.querySelector('.tradingview-widget-container');
