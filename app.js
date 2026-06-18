@@ -775,16 +775,17 @@ DATOS ACTUALES DEL MERCADO:
 PAUTAS CRÍTICAS DE CONTEXTO:
 - En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
 - Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel (por ejemplo, tensiones entre EE.UU. e Irán, guerras comerciales, conflictos en Europa, etc.) basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
-- Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). 
-- Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
+- Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
+- Investiga y analiza el flujo de capitales en los **ETF de Criptomonedas al contado (principalmente Spot Bitcoin y Ethereum ETFs)** en Wall Street (entradas netas o salidas netas recientes). Utiliza esta información para explicar si el capital institucional está acumulando (comprando) o distribuyendo (vendiendo) activos digitales en los mercados regulados tradicionales.
 
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
 1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
 2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre. Mención a la acumulación institucional de Oro y demanda global de Cobre)
-3. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC y F&G)
-4. SENTIMIENTO DEL MERCADO
-5. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
-6. RECOMENDACIONES TÁCTICAS
+3. FLUJO DE FONDOS INSTITUCIONALES / ETF CRYPTO (Entradas y salidas netas de los ETF de BTC y ETH para determinar el comportamiento de los inversores institucionales en Wall Street)
+4. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC y F&G)
+5. SENTIMIENTO DEL MERCADO
+6. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
+7. RECOMENDACIONES TÁCTICAS
 
 FORMATO GENERAL:
 - Utiliza Markdown para la estructura (títulos H2, listas, negritas).
