@@ -638,7 +638,7 @@
             let cryptoPricesCtx = 'No data';
             if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
                 cryptoPricesCtx = cryptoMarkets.slice(0, 200).map(c => 
-                    `${c.name} (${c.symbol.toUpperCase()}): Pr=$${c.current_price}, ATH=$${c.ath}, CaATH=${c.ath_change_percentage.toFixed(1)}%`
+                    `${c.name} (${c.symbol.toUpperCase()}): Pr=$${c.current_price}, ATH=$${c.ath}, Distancia_al_ATH=${c.ath_change_percentage.toFixed(1)}%`
                 ).join(' | ');
             }
 
@@ -662,9 +662,10 @@ ${cryptoPricesCtx}
 - Titulares Crypto hoy: ${cryptoNews}
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
-- Horizonte Temporal Solicitado: ${currentHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
+- Horizonte Temporal Solicitado: ${currentHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING de 1 a 14 días)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
 
 PAUTAS CRÍTICAS DE CONTEXTO:
+- EL HORIZONTE TEMPORAL RIGE TODO EL REPORTE: Si el horizonte es CORTO PLAZO, el tono, las conclusiones, y el análisis técnico (incluyendo BTC y ETH) deben enfocarse estrictamente en trading, soportes/resistencias inmediatas y momentum de los próximos días, evitando menciones a acumulación de años o "inversores pacientes". Si es LARGO PLAZO, enfócate en macro, fundamentales y valoración.
 - En la cabecera del reporte debes indicar siempre: "**Fecha:** ${currentDateStr} | **Analista:** Gemini AI Advisor".
 - REGLAS DE LARGO PLAZO (VALUACIÓN DE VALOR Y FUNDAMENTALES): Si el Horizonte Temporal Solicitado es LARGO PLAZO, la justificación ("reason") y análisis de cada oportunidad cripto debe evaluar estrictamente:
   1) El suministro de tokens (Total Supply vs Max Supply), especificando si ya alcanzó su límite máximo o si existe riesgo de dilución por emisiones futuras.
