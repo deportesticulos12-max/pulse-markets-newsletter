@@ -688,9 +688,17 @@ ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un das
 
 OPORTUNIDADES DIVERSIFICADAS (SECCIÓN ESPECIAL AL FINAL DEL JSON):
 Debes proponer exactamente 3 oportunidades por categoría de activos acorde al Horizonte Temporal solicitado (${currentHorizon === 'short' ? 'Corto Plazo: especulación de 1-14 días, alta volatilidad' : 'Largo Plazo: acumulación de valor, fundamentos sólidos'}):
-- Categoría 1: **Criptomonedas** (Ej: BTC, ETH, SOL, altcoins líquidas)
-- Categoría 2: **Acciones EE.UU.** (Ej: NVIDIA, Tesla, Google, Apple, etc.)
-- Categoría 3: **Acciones Argentinas** (Ej: GGAL, YPF, PAMP, SUPV, ALUA, etc.)
+
+REGLAS OBLIGATORIAS DE SELECCIÓN DE ACTIVOS SEGÚN HORIZONTE:
+Si el Horizonte Temporal solicitado es LARGO PLAZO:
+- Categoría 1: **Criptomonedas**: Selecciona monedas con sólidos fundamentos de largo plazo, baja tasa de inflación/dilución y gran adopción de red (ej: BTC, ETH, LINK, o protocolos de infraestructura robustos). Evita memecoins o monedas puramente especulativas de altísima volatilidad.
+- Categoría 2: **Acciones EE.UU.**: Enfócate en empresas líderes de mercado con flujos de caja predecibles y múltiplos de valuación razonables (ej: Alphabet/Google, Apple, Microsoft, Amazon).
+- Categoría 3: **Acciones Argentinas**: Elige empresas exportadoras netas o de energía con flujos de caja firmes y valuaciones contables descontadas (ej: Central Puerto, Aluar, YPF, Pampa Energía).
+
+Si el Horizonte Temporal solicitado es CORTO PLAZO:
+- Categoría 1: **Criptomonedas**: ¡ESTÁ PROHIBIDO sugerir solo BTC y ETH repetidamente! Debes seleccionar activos de alta volatilidad y beta elevada dentro del Top 200 que muestren momentum técnico o sobreventa madura para un rebote/swing trading rápido en 1-14 días (ej: SOL, NEAR, AVAX, FTM, o memecoins líquidas en tendencia como WIF/PEPE/DOGE).
+- Categoría 2: **Acciones EE.UU.**: Enfócate en activos de alto volumen y volatilidad listos para rupturas técnicas o rebotes intradiarios (ej: Tesla, NVIDIA, Coinbase, MicroStrategy).
+- Categoría 3: **Acciones Argentinas**: Elige papeles con alta volatilidad y liquidez local para trading rápido (ej: Grupo Galicia, Banco Macro, YPF, Pampa Energía).
 
 IMPORTANTE: Los precios objetivos (targets) de corto plazo de las criptos deben ser realistas en relación a su cotización real actual (por ejemplo, si SOL cotiza en $70, un target de corto plazo coherente es $78-$82, jamás pongas targets desproporcionados como $180 en corto plazo).
 
