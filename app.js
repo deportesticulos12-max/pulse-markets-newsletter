@@ -583,53 +583,59 @@
     }
 
     // ── AI Analysis (Gemini) ──
-    async function generateDailyAnalysis(forceRefresh = false) {
+    async function generateDailyAnalysis(forceRefresh = false, targetHorizon = currentHorizon) {
         const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42SVNuQUdhRGtobTNNS2dhVFlpWDliek40eWFjY0xQZG1OYURwblVyNjNXVVE=');
         const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
         const container = document.getElementById('ai-report-content');
         if (!container) return;
 
         if (!apiKey) {
-            container.innerHTML = `
-                <div class="api-key-missing">
-                    <p>Para ver el resumen inteligente diario, necesitas configurar tu clave API de Gemini.</p>
-                    <button onclick="document.getElementById('config-btn').click()">Configurar API Key</button>
-                </div>
-            `;
+            if (targetHorizon === currentHorizon) {
+                container.innerHTML = `
+                    <div class="api-key-missing">
+                        <p>Para ver el resumen inteligente diario, necesitas configurar tu clave API de Gemini.</p>
+                        <button onclick="document.getElementById('config-btn').click()">Configurar API Key</button>
+                    </div>
+                `;
+            }
             return;
         }
 
         // Only generate once per session to save API calls unless refreshed explicitly
         if (forceRefresh) {
-            localStorage.removeItem('pm_ai_analysis_long');
-            localStorage.removeItem('pm_ai_analysis_short');
-            localStorage.removeItem('pm_ai_analysis_backup_long');
-            localStorage.removeItem('pm_ai_analysis_backup_short');
+            localStorage.removeItem('pm_ai_analysis_' + targetHorizon);
+            localStorage.removeItem('pm_ai_analysis_backup_' + targetHorizon);
             
             // Clear DOM sub-containers to force re-render of new TradingView widgets
-            ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = '';
-            });
+            if (targetHorizon === currentHorizon) {
+                ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '';
+                });
+            }
         }
         
-        const cachedAnalysis = Cache.get('ai_analysis_' + currentHorizon);
+        const cachedAnalysis = Cache.get('ai_analysis_' + targetHorizon);
         if (cachedAnalysis && !forceRefresh) {
-            container.innerHTML = marked.parse(cachedAnalysis.markdown);
-            if (cachedAnalysis.opps) {
-                renderAIOpportunities(cachedAnalysis.opps);
-            } else {
-                renderStaticOpportunities();
+            if (targetHorizon === currentHorizon) {
+                container.innerHTML = marked.parse(cachedAnalysis.markdown);
+                if (cachedAnalysis.opps) {
+                    renderAIOpportunities(cachedAnalysis.opps);
+                } else {
+                    renderStaticOpportunities();
+                }
             }
             return;
         }
 
-        container.innerHTML = `
-            <div class="ai-loading">
-                <div class="spinner"></div> 
-                <p>Analizando los mercados y redactando el reporte diario con IA...</p>
-            </div>
-        `;
+        if (targetHorizon === currentHorizon) {
+            container.innerHTML = `
+                <div class="ai-loading">
+                    <div class="spinner"></div> 
+                    <p>Analizando los mercados y redactando el reporte diario con IA...</p>
+                </div>
+            `;
+        }
 
         try {
             // Gather context data for the prompt
@@ -670,7 +676,7 @@ ${cryptoPricesCtx}
 - Titulares Crypto hoy: ${cryptoNews}
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
-- Horizonte Temporal Solicitado: ${currentHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING de 1 a 14 días)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
+- Horizonte Temporal Solicitado: ${targetHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING de 1 a 14 días)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
 
 PAUTAS CRÍTICAS DE CONTEXTO:
 - EL HORIZONTE TEMPORAL RIGE TODO EL REPORTE: Si el horizonte es CORTO PLAZO, el tono, las conclusiones, y el análisis técnico (incluyendo BTC y ETH) deben enfocarse estrictamente en trading, soportes/resistencias inmediatas y momentum de los próximos días, evitando menciones a acumulación de años o "inversores pacientes". Si es LARGO PLAZO, enfócate en macro, fundamentales y valoración.
@@ -696,7 +702,7 @@ ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un das
 7. RECOMENDACIONES TÁCTICAS
 
 OPORTUNIDADES DIVERSIFICADAS (SECCIÓN ESPECIAL AL FINAL DEL JSON):
-Debes proponer exactamente 3 oportunidades por categoría de activos acorde al Horizonte Temporal solicitado (${currentHorizon === 'short' ? 'Corto Plazo: especulación de 1-14 días, alta volatilidad' : 'Largo Plazo: acumulación de valor, fundamentos sólidos'}):
+Debes proponer exactamente 3 oportunidades por categoría de activos acorde al Horizonte Temporal solicitado (${targetHorizon === 'short' ? 'Corto Plazo: especulación de 1-14 días, alta volatilidad' : 'Largo Plazo: acumulación de valor, fundamentos sólidos'}):
 
 REGLAS OBLIGATORIAS DE SELECCIÓN DE ACTIVOS SEGÚN HORIZONTE:
 Si el Horizonte Temporal solicitado es LARGO PLAZO:
@@ -789,16 +795,18 @@ FORMATO GENERAL:
             }
 
             // Cache it for 1 hour to prevent spamming the API on every reload
-            Cache.set('ai_analysis_' + currentHorizon, { markdown: cleanMarkdown, opps: parsedOpps }, 3600000);
+            Cache.set('ai_analysis_' + targetHorizon, { markdown: cleanMarkdown, opps: parsedOpps }, 3600000);
             
             // Also store a backup that NEVER expires to recover from quota errors
-            localStorage.setItem('pm_ai_analysis_backup_' + currentHorizon, JSON.stringify({ markdown: cleanMarkdown, opps: parsedOpps, ts: Date.now() }));
+            localStorage.setItem('pm_ai_analysis_backup_' + targetHorizon, JSON.stringify({ markdown: cleanMarkdown, opps: parsedOpps, ts: Date.now() }));
 
-            container.innerHTML = marked.parse(cleanMarkdown);
-            if (parsedOpps) {
-                renderAIOpportunities(parsedOpps);
-            } else {
-                renderStaticOpportunities();
+            if (targetHorizon === currentHorizon) {
+                container.innerHTML = marked.parse(cleanMarkdown);
+                if (parsedOpps) {
+                    renderAIOpportunities(parsedOpps);
+                } else {
+                    renderStaticOpportunities();
+                }
             }
             
         } catch (error) {
@@ -806,8 +814,8 @@ FORMATO GENERAL:
             
             // Try to load last successfully generated backup from localStorage
             try {
-                const backupRaw = localStorage.getItem('pm_ai_analysis_backup_' + currentHorizon);
-                if (backupRaw) {
+                const backupRaw = localStorage.getItem('pm_ai_analysis_backup_' + targetHorizon);
+                if (backupRaw && targetHorizon === currentHorizon) {
                     const backup = JSON.parse(backupRaw);
                     const formattedTime = backup.ts ? new Date(backup.ts).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : 'reciente';
                     const formattedDate = backup.ts ? new Date(backup.ts).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' }) : '';
@@ -831,13 +839,15 @@ FORMATO GENERAL:
                 console.error("Failed to load daily analysis backup:", e);
             }
 
-            container.innerHTML = `
-                <div class="api-key-missing">
-                    <p style="color: #ef4444;">Error al generar el reporte: ${error.message}</p>
-                    <button onclick="localStorage.removeItem('pm_ai_analysis_long'); localStorage.removeItem('pm_ai_analysis_short'); generateDailyAnalysis();">Reintentar</button>
-                </div>
-            `;
-            renderStaticOpportunities();
+            if (targetHorizon === currentHorizon) {
+                container.innerHTML = `
+                    <div class="api-key-missing">
+                        <p style="color: #ef4444;">Error al generar el reporte: ${error.message}</p>
+                        <button onclick="localStorage.removeItem('pm_ai_analysis_long'); localStorage.removeItem('pm_ai_analysis_short'); generateDailyAnalysis();">Reintentar</button>
+                    </div>
+                `;
+                renderStaticOpportunities();
+            }
         }
     }
 
@@ -1037,7 +1047,7 @@ FORMATO GENERAL:
                 renderOpportunities();
                 
                 // Also trigger AI analysis generation/cache-loading for the selected horizon
-                generateDailyAnalysis(false);
+                generateDailyAnalysis(false, currentHorizon);
             });
         });
     }
@@ -1053,15 +1063,29 @@ FORMATO GENERAL:
         // Setup AI Manual Refresh
         const refreshAiBtn = document.getElementById('refresh-ai-btn');
         if (refreshAiBtn) {
-            refreshAiBtn.addEventListener('click', () => {
+            refreshAiBtn.addEventListener('click', async () => {
                 const svg = refreshAiBtn.querySelector('svg');
                 if (svg) svg.style.animation = 'spin 1s linear infinite';
                 refreshAiBtn.disabled = true;
                 
-                generateDailyAnalysis(true).finally(() => {
+                // Clear all DOM sub-containers to force re-render of charts
+                ['crypto-opportunities', 'us-opportunities', 'arg-opportunities'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '';
+                });
+
+                const otherHorizon = currentHorizon === 'long' ? 'short' : 'long';
+                
+                try {
+                    // We run them sequentially to avoid immediate 429 rate limit on free tier
+                    // First generate for the currently viewed horizon so UI updates fast
+                    await generateDailyAnalysis(true, currentHorizon);
+                    // Then quietly fetch the background horizon
+                    await generateDailyAnalysis(true, otherHorizon);
+                } finally {
                     if (svg) svg.style.animation = 'none';
                     refreshAiBtn.disabled = false;
-                });
+                }
             });
         }
 
