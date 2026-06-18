@@ -774,6 +774,9 @@ FORMATO GENERAL:
             // Cache it for 1 hour to prevent spamming the API on every reload
             Cache.set('ai_analysis_' + currentHorizon, { markdown: cleanMarkdown, opps: parsedOpps }, 3600000);
             
+            // Also store a backup that NEVER expires to recover from quota errors
+            localStorage.setItem('pm_ai_analysis_backup_' + currentHorizon, JSON.stringify({ markdown: cleanMarkdown, opps: parsedOpps, ts: Date.now() }));
+
             container.innerHTML = marked.parse(cleanMarkdown);
             if (parsedOpps) {
                 renderAIOpportunities(parsedOpps);
@@ -783,6 +786,34 @@ FORMATO GENERAL:
             
         } catch (error) {
             console.error("AI Generation Error:", error);
+            
+            // Try to load last successfully generated backup from localStorage
+            try {
+                const backupRaw = localStorage.getItem('pm_ai_analysis_backup_' + currentHorizon);
+                if (backupRaw) {
+                    const backup = JSON.parse(backupRaw);
+                    const formattedTime = backup.ts ? new Date(backup.ts).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : 'reciente';
+                    const formattedDate = backup.ts ? new Date(backup.ts).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' }) : '';
+                    
+                    container.innerHTML = `
+                        <div class="disclaimer-banner" style="background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2); color: #f87171; margin-bottom: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                            <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20" style="flex-shrink:0;"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <p style="margin: 0;"><strong>Límite de cuota API de Gemini:</strong> Mostrando el último reporte archivado del día (${formattedDate} ${formattedTime}) para no interrumpir tu visualización.</p>
+                        </div>
+                        ${marked.parse(backup.markdown)}
+                    `;
+                    
+                    if (backup.opps) {
+                        renderAIOpportunities(backup.opps);
+                    } else {
+                        renderStaticOpportunities();
+                    }
+                    return;
+                }
+            } catch (e) {
+                console.error("Failed to load daily analysis backup:", e);
+            }
+
             container.innerHTML = `
                 <div class="api-key-missing">
                     <p style="color: #ef4444;">Error al generar el reporte: ${error.message}</p>
