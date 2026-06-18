@@ -603,6 +603,8 @@
         if (forceRefresh) {
             localStorage.removeItem('pm_ai_analysis_long');
             localStorage.removeItem('pm_ai_analysis_short');
+            localStorage.removeItem('pm_ai_analysis_backup_long');
+            localStorage.removeItem('pm_ai_analysis_backup_short');
         }
         
         const cachedAnalysis = Cache.get('ai_analysis_' + currentHorizon);
