@@ -20,12 +20,13 @@
 
     // ── Cache Manager ──
     const Cache = {
-        get(key) {
+        get(key, customTTL) {
             try {
                 const raw = localStorage.getItem(`pm_${key}`);
                 if (!raw) return null;
                 const { data, ts } = JSON.parse(raw);
-                if (Date.now() - ts > CONFIG.CACHE_TTL) return null;
+                const ttl = customTTL || CONFIG.CACHE_TTL;
+                if (Date.now() - ts > ttl) return null;
                 return data;
             } catch { return null; }
         },
@@ -35,6 +36,7 @@
             } catch { /* storage full, ignore */ }
         }
     };
+    const AI_CACHE_TTL = 60 * 60 * 1000; // 1 hour for AI analysis
 
     // ── API Key Manager ──
     function getApiKey() {
@@ -629,13 +631,15 @@
             }
         }
         
-        const cachedAnalysis = Cache.get('ai_analysis_' + targetHorizon);
+        const cachedAnalysis = Cache.get('ai_analysis_' + targetHorizon, AI_CACHE_TTL);
         if (cachedAnalysis && !forceRefresh) {
             if (targetHorizon === currentHorizon) {
                 container.innerHTML = marked.parse(cachedAnalysis.markdown);
                 if (cachedAnalysis.opps) {
+                    console.log('[PulseMarkets] Rendering AI opportunities from cache for horizon:', targetHorizon, cachedAnalysis.opps);
                     renderAIOpportunities(cachedAnalysis.opps);
                 } else {
+                    console.warn('[PulseMarkets] Cache had no opps, showing static fallback for horizon:', targetHorizon);
                     renderStaticOpportunities();
                 }
                 updateAITimestamp(cachedAnalysis.ts);
@@ -794,40 +798,77 @@ FORMATO GENERAL:
             const data = await response.json();
             const textResponse = data.candidates[0].content.parts[0].text;
             
-            // Extract Markdown and JSON
+            // Extract Markdown and JSON — multi-strategy robust parser
             let cleanMarkdown = textResponse;
             let parsedOpps = null;
             
-            let match = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/i);
+            // Strategy 1: Look for <opps_json>...</opps_json> tags
+            let jsonRaw = null;
+            const xmlMatch = textResponse.match(/<opps_json>([\s\S]*?)<\/opps_json>/i);
+            if (xmlMatch && xmlMatch[1]) {
+                jsonRaw = xmlMatch[1];
+                cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/gi, '').trim();
+                console.log('[PulseMarkets] JSON extraction: Strategy 1 (XML tags) matched');
+            }
             
-            // Fallback: If Gemini forgot the tags but output a json block at the end
-            if (!match) {
-                const codeBlocks = [...textResponse.matchAll(/```(?:json)?\s*([\s\S]*?)\s*```/gi)];
-                if (codeBlocks.length > 0) {
-                    // Assume the last code block contains the opportunities JSON
-                    match = codeBlocks[codeBlocks.length - 1];
+            // Strategy 2: Look for the last ```json...``` code block that contains "crypto"
+            if (!jsonRaw) {
+                const codeBlockMatches = [...textResponse.matchAll(/```(?:json)?\s*([\s\S]*?)```/gi)];
+                for (let i = codeBlockMatches.length - 1; i >= 0; i--) {
+                    if (codeBlockMatches[i][1] && codeBlockMatches[i][1].includes('"crypto"')) {
+                        jsonRaw = codeBlockMatches[i][1];
+                        cleanMarkdown = textResponse.replace(codeBlockMatches[i][0], '').trim();
+                        console.log('[PulseMarkets] JSON extraction: Strategy 2 (code block) matched');
+                        break;
+                    }
                 }
             }
-
-            if (match && match[1]) {
+            
+            // Strategy 3: Find raw JSON object containing "crypto" key anywhere in the text
+            if (!jsonRaw) {
+                const rawJsonMatch = textResponse.match(/(\{[\s\S]*"crypto"\s*:\s*\[[\s\S]*\})/i);
+                if (rawJsonMatch && rawJsonMatch[1]) {
+                    jsonRaw = rawJsonMatch[1];
+                    cleanMarkdown = textResponse.replace(rawJsonMatch[0], '').trim();
+                    console.log('[PulseMarkets] JSON extraction: Strategy 3 (raw braces) matched');
+                }
+            }
+            
+            // Now parse the extracted JSON
+            if (jsonRaw) {
                 try {
-                    let jsonString = match[1].replace(/```json/gi, '').replace(/```/g, '').trim();
-                    // Sometimes there is text before or after the JSON braces. Extract everything from first { to last }
+                    // Clean up: remove markdown artifacts, whitespace issues
+                    let jsonString = jsonRaw.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    // Extract from first { to last }
                     const firstBrace = jsonString.indexOf('{');
                     const lastBrace = jsonString.lastIndexOf('}');
-                    if (firstBrace !== -1 && lastBrace !== -1) {
+                    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
                         jsonString = jsonString.substring(firstBrace, lastBrace + 1);
                     }
+                    // Fix common Gemini JSON issues: trailing commas
+                    jsonString = jsonString.replace(/,\s*([\]\}])/g, '$1');
                     
                     parsedOpps = JSON.parse(jsonString);
-                    // Remove the parsed block from markdown to keep it clean
-                    cleanMarkdown = textResponse.replace(/<opps_json>[\s\S]*?<\/opps_json>/gi, '').trim();
-                    // If fallback was used, try to remove the JSON block from markdown too
-                    cleanMarkdown = cleanMarkdown.replace(/```(?:json)?\s*\{\s*"crypto"[\s\S]*?```/gi, '').trim();
+                    
+                    // Validate the structure has the expected keys
+                    if (!parsedOpps.crypto && !parsedOpps.usa && !parsedOpps.argentina) {
+                        console.warn('[PulseMarkets] Parsed JSON but missing expected keys (crypto/usa/argentina):', Object.keys(parsedOpps));
+                        parsedOpps = null;
+                    } else {
+                        console.log('[PulseMarkets] Successfully parsed AI opportunities:', {
+                            crypto: parsedOpps.crypto?.length || 0,
+                            usa: parsedOpps.usa?.length || 0,
+                            argentina: parsedOpps.argentina?.length || 0
+                        });
+                    }
                 } catch (jsonErr) {
-                    console.error("Failed to parse AI Opportunities JSON:", jsonErr);
-                    console.log("Raw JSON string was:", match[1]);
+                    console.error('[PulseMarkets] Failed to parse AI Opportunities JSON:', jsonErr);
+                    console.log('[PulseMarkets] Raw JSON string was:', jsonRaw.substring(0, 500));
+                    parsedOpps = null;
                 }
+            } else {
+                console.warn('[PulseMarkets] No JSON found in AI response. Full response length:', textResponse.length);
+                console.log('[PulseMarkets] Last 300 chars of response:', textResponse.substring(textResponse.length - 300));
             }
 
             const currentTimestamp = Date.now();
@@ -841,8 +882,10 @@ FORMATO GENERAL:
             if (targetHorizon === currentHorizon) {
                 container.innerHTML = marked.parse(cleanMarkdown);
                 if (parsedOpps) {
+                    console.log('[PulseMarkets] Rendering fresh AI opportunities for horizon:', targetHorizon);
                     renderAIOpportunities(parsedOpps);
                 } else {
+                    console.warn('[PulseMarkets] AI returned no valid opportunities JSON, showing static fallback');
                     renderStaticOpportunities();
                 }
                 updateAITimestamp(currentTimestamp);
@@ -1062,13 +1105,32 @@ FORMATO GENERAL:
 
     // ── Render opportunities router ──
     function renderOpportunities() {
-        const cached = Cache.get('ai_analysis_' + currentHorizon);
+        // First try the in-memory/localStorage cache (1 hour TTL for AI)
+        const cached = Cache.get('ai_analysis_' + currentHorizon, AI_CACHE_TTL);
         if (cached && cached.opps) {
+            console.log('[PulseMarkets] renderOpportunities: using cache for', currentHorizon);
             renderAIOpportunities(cached.opps);
-        } else {
-            // Re-run AI analysis if not cached, or show static fallback
-            renderStaticOpportunities();
+            return;
         }
+        
+        // Second: try the permanent backup
+        try {
+            const backupRaw = localStorage.getItem('pm_ai_analysis_backup_' + currentHorizon);
+            if (backupRaw) {
+                const backup = JSON.parse(backupRaw);
+                if (backup && backup.opps) {
+                    console.log('[PulseMarkets] renderOpportunities: using backup for', currentHorizon);
+                    renderAIOpportunities(backup.opps);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error('[PulseMarkets] renderOpportunities: failed to load backup', e);
+        }
+        
+        // Last resort: show static hardcoded fallback
+        console.warn('[PulseMarkets] renderOpportunities: no AI data available, using static fallback');
+        renderStaticOpportunities();
     }
 
     // ── Horizon Selector Toggle ──
