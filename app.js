@@ -601,12 +601,18 @@
 
         // Only generate once per session to save API calls unless refreshed explicitly
         if (forceRefresh) {
-            localStorage.removeItem('pm_ai_analysis');
+            localStorage.removeItem('pm_ai_analysis_long');
+            localStorage.removeItem('pm_ai_analysis_short');
         }
         
-        const cachedAnalysis = Cache.get('ai_analysis');
+        const cachedAnalysis = Cache.get('ai_analysis_' + currentHorizon);
         if (cachedAnalysis && !forceRefresh) {
-            container.innerHTML = marked.parse(cachedAnalysis);
+            container.innerHTML = marked.parse(cachedAnalysis.markdown);
+            if (cachedAnalysis.opps) {
+                renderAIOpportunities(cachedAnalysis.opps);
+            } else {
+                renderStaticOpportunities();
+            }
             return;
         }
 
@@ -897,10 +903,34 @@ FORMATO GENERAL:
         }
     }
 
+    // ── Horizon Selector Toggle ──
+    function setupHorizonToggle() {
+        const toggles = document.querySelectorAll('.horizon-toggle');
+        toggles.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const horizon = btn.dataset.horizon;
+                if (horizon === currentHorizon) return;
+                
+                currentHorizon = horizon;
+                
+                // Update active state class on buttons
+                toggles.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Re-render opportunities using cached analysis if available, or fetch new analysis
+                renderOpportunities();
+                
+                // Also trigger AI analysis generation/cache-loading for the selected horizon
+                generateDailyAnalysis(false);
+            });
+        });
+    }
+
     // ── Init ──
     function init() {
         setupNavigation();
         setupConfig();
+        setupHorizonToggle();
         renderOpportunities();
         loadAllData();
 
