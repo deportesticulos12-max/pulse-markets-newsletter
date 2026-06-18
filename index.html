@@ -571,9 +571,20 @@
             <!-- OPPORTUNITIES SECTION -->
             <!-- ═══════════════════════════════════════════════ -->
             <section class="content-section" id="section-opportunities">
-                <div class="section-header">
-                    <h2 class="section-title"><span class="title-icon">💎</span> Oportunidades de Inversión</h2>
-                    <p class="section-subtitle">Activos subvaluados con alto potencial de retorno</p>
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2 class="section-title"><span class="title-icon">💎</span> Oportunidades de Inversión</h2>
+                        <p class="section-subtitle">Activos subvaluados con alto potencial de retorno</p>
+                    </div>
+                    <!-- Horizon Selector Toggle -->
+                    <div style="display: flex; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 4px; border-radius: 10px;">
+                        <button id="horizon-long-btn" class="nav-tab horizon-toggle active" data-horizon="long" style="padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; border: none; cursor: pointer; transition: all 0.2s;">
+                            Largo Plazo (Inversión)
+                        </button>
+                        <button id="horizon-short-btn" class="nav-tab horizon-toggle" data-horizon="short" style="padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; border: none; cursor: pointer; transition: all 0.2s;">
+                            Corto Plazo (Trading)
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Disclaimer -->

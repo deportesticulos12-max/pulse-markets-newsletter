@@ -435,9 +435,6 @@
                     <div class="fng-detail-item"><span class="fng-detail-label">Rango</span><span class="fng-detail-value">0 (Miedo Extremo) → 100 (Codicia Extrema)</span></div>
                     <div class="fng-detail-item"><span class="fng-detail-label">Interpretación</span><span class="fng-detail-value">${score <= 25 ? 'Posible oportunidad de compra' : score <= 50 ? 'Mercado cauto, monitorear' : score <= 75 ? 'Mercado optimista, cautela en nuevas posiciones' : 'Mercado eufórico, considerar tomar ganancias'}</span></div>
                     <div class="fng-detail-item"><span class="fng-detail-label">Fuente</span><span class="fng-detail-value">FearGreedChart.com</span></div>
-                </div>
-            `;
-        } catch (e) {
             console.error('Fear & Greed error:', e);
             document.getElementById('fng-display').innerHTML = '<div class="error-state"><div class="error-icon">📊</div><p>No se pudo cargar el Fear & Greed Index</p></div>';
             document.getElementById('m-fng').textContent = '—';
@@ -446,69 +443,137 @@
     }
 
     // ── Render: Opportunities ──
+    let currentHorizon = 'long'; // Default investment horizon
+
     function renderOpportunities() {
         const opportunities = {
-            argentina: [
-                {
-                    symbol: 'BCBA:SUPV', name: 'Grupo Supervielle', tvSymbol: 'BCBA:SUPV',
-                    badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                    metrics: [{ label: 'P/E Ratio', value: '5.2x' }, { label: 'P/BV', value: '0.8x' }, { label: 'Sector', value: 'Bancario' }, { label: 'Tipo', value: 'Value Play' }],
-                    reason: '<strong>Fundamento:</strong> Cotiza con descuento significativo respecto a su valor libro. El sector bancario argentino se beneficia de la normalización monetaria. ROE elevado y crecimiento de cartera crediticia acelerado.'
-                },
-                {
-                    symbol: 'BCBA:CEPU', name: 'Central Puerto', tvSymbol: 'BCBA:CEPU',
-                    badge: 'buy', badgeText: 'Comprar',
-                    metrics: [{ label: 'P/E Ratio', value: '6.8x' }, { label: 'Div. Yield', value: '4.2%' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Dividendos' }],
-                    reason: '<strong>Fundamento:</strong> Empresa energética con flujo de caja sólido y dividendos atractivos. La desregulación del sector energético argentino beneficia directamente a generadoras.'
-                },
-                {
-                    symbol: 'BCBA:ALUA', name: 'Aluar Aluminio', tvSymbol: 'BCBA:ALUA',
-                    badge: 'buy', badgeText: 'Comprar',
-                    metrics: [{ label: 'P/E Ratio', value: '4.5x' }, { label: 'P/BV', value: '0.65x' }, { label: 'Sector', value: 'Materiales' }, { label: 'Tipo', value: 'Value + Export' }],
-                    reason: '<strong>Fundamento:</strong> Cotiza muy por debajo de su valor libro. Exportadora natural que se beneficia de competitividad cambiaria. Bajo apalancamiento financiero.'
-                }
-            ],
-            usa: [
-                {
-                    symbol: 'GOOGL', name: 'Alphabet Inc.', tvSymbol: 'NASDAQ:GOOGL',
-                    badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                    metrics: [{ label: 'P/E Forward', value: '18.5x' }, { label: 'PEG Ratio', value: '0.92' }, { label: 'Sector', value: 'Tech / IA' }, { label: 'Tipo', value: 'Growth + Value' }],
-                    reason: '<strong>Fundamento:</strong> Trading con descuento respecto a peers tech. Gemini posiciona a Google fuerte en IA. Cloud creciendo ~28% YoY. Programa de buyback masivo.'
-                },
-                {
-                    symbol: 'TSM', name: 'Taiwan Semiconductor', tvSymbol: 'NYSE:TSM',
-                    badge: 'buy', badgeText: 'Comprar',
-                    metrics: [{ label: 'P/E Forward', value: '22x' }, { label: 'Revenue Growth', value: '+36% YoY' }, { label: 'Sector', value: 'Semiconductors' }, { label: 'Tipo', value: 'Monopoly Play' }],
-                    reason: '<strong>Fundamento:</strong> Monopolio virtual en fabricación de chips avanzados. Todos los líderes tech dependen de TSMC. Demanda insaciable por chips de IA.'
-                },
-                {
-                    symbol: 'AMZN', name: 'Amazon.com', tvSymbol: 'NASDAQ:AMZN',
-                    badge: 'buy', badgeText: 'Comprar',
-                    metrics: [{ label: 'P/E Forward', value: '28x' }, { label: 'AWS Growth', value: '+19% YoY' }, { label: 'Sector', value: 'Tech / Cloud' }, { label: 'Tipo', value: 'Platform Play' }],
-                    reason: '<strong>Fundamento:</strong> AWS sigue siendo líder en cloud computing. Márgenes operativos en expansión. Advertising en crecimiento acelerado.'
-                }
-            ],
-            crypto: [
-                {
-                    symbol: 'LINK', name: 'Chainlink', tvSymbol: 'BINANCE:LINKUSDT',
-                    badge: 'strong-buy', badgeText: 'Compra Fuerte',
-                    metrics: [{ label: 'Sector', value: 'Oracles / RWA' }, { label: 'Adopción', value: '75% protocolos DeFi' }, { label: 'Tipo', value: 'Infraestructura' }, { label: 'Desde ATH', value: '~-57%' }],
-                    reason: '<strong>Fundamento:</strong> Infraestructura crítica de DeFi. CCIP posiciona a Chainlink como backbone de tokenización de activos reales (RWA), mercado de $16T. Adopción institucional con Swift y DTCC.'
-                },
-                {
-                    symbol: 'ADA', name: 'Cardano', tvSymbol: 'BINANCE:ADAUSDT',
-                    badge: 'buy', badgeText: 'Comprar',
-                    metrics: [{ label: 'Sector', value: 'L1 Blockchain' }, { label: 'Governance', value: 'On-chain' }, { label: 'Tipo', value: 'Ecosystem Play' }, { label: 'Desde ATH', value: '~-64%' }],
-                    reason: '<strong>Fundamento:</strong> Blockchain con governance on-chain robusto. Upgrade Hydra mejora escalabilidad. Crecimiento explosivo del ecosistema DeFi de Cardano.'
-                },
-                {
-                    symbol: 'AVAX', name: 'Avalanche', tvSymbol: 'BINANCE:AVAXUSDT',
-                    badge: 'speculative', badgeText: 'Especulativo',
-                    metrics: [{ label: 'Sector', value: 'L1 + Subnets' }, { label: 'Partnerships', value: 'JP Morgan, Citi' }, { label: 'Tipo', value: 'Institutional DeFi' }, { label: 'Desde ATH', value: '~-67%' }],
-                    reason: '<strong>Fundamento:</strong> Subnets permiten blockchains customizados para instituciones. Partnerships con JP Morgan y Citi para tokenización. Avalanche9000 upgrade reduce costos 99%.'
-                }
-            ]
+            long: {
+                argentina: [
+                    {
+                        symbol: 'BCBA:SUPV', name: 'Grupo Supervielle', tvSymbol: 'BCBA:SUPV',
+                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
+                        metrics: [{ label: 'P/E Ratio', value: '5.2x' }, { label: 'P/BV', value: '0.8x' }, { label: 'Sector', value: 'Bancario' }, { label: 'Tipo', value: 'Value Play' }],
+                        reason: '<strong>Fundamento:</strong> Cotiza con descuento significativo respecto a su valor libro. El sector bancario argentino se beneficia de la normalización monetaria a largo plazo. ROE elevado y crecimiento sostenido.'
+                    },
+                    {
+                        symbol: 'BCBA:CEPU', name: 'Central Puerto', tvSymbol: 'BCBA:CEPU',
+                        badge: 'buy', badgeText: 'Comprar',
+                        metrics: [{ label: 'P/E Ratio', value: '6.8x' }, { label: 'Div. Yield', value: '4.2%' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Dividendos' }],
+                        reason: '<strong>Fundamento:</strong> Empresa energética con flujo de caja extremadamente sólido y dividendos recurrentes atractivos. Ideal para carteras de acumulación.'
+                    },
+                    {
+                        symbol: 'BCBA:ALUA', name: 'Aluar Aluminio', tvSymbol: 'BCBA:ALUA',
+                        badge: 'buy', badgeText: 'Comprar',
+                        metrics: [{ label: 'P/E Ratio', value: '4.5x' }, { label: 'P/BV', value: '0.65x' }, { label: 'Sector', value: 'Materiales' }, { label: 'Tipo', value: 'Value + Export' }],
+                        reason: '<strong>Fundamento:</strong> Empresa exportadora neta subvaluada con activos físicos de alto valor. Cobertura perfecta de largo plazo contra devaluación de la moneda.'
+                    }
+                ],
+                usa: [
+                    {
+                        symbol: 'GOOGL', name: 'Alphabet Inc.', tvSymbol: 'NASDAQ:GOOGL',
+                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
+                        metrics: [{ label: 'P/E Forward', value: '18.5x' }, { label: 'PEG Ratio', value: '0.92' }, { label: 'Sector', value: 'Tech / IA' }, { label: 'Tipo', value: 'Growth' }],
+                        reason: '<strong>Fundamento:</strong> Líder indiscutido en IA y búsquedas globales. Excelente generación de caja libre e inversión masiva en centros de datos a largo plazo.'
+                    },
+                    {
+                        symbol: 'TSM', name: 'Taiwan Semiconductor', tvSymbol: 'NYSE:TSM',
+                        badge: 'buy', badgeText: 'Comprar',
+                        metrics: [{ label: 'P/E Forward', value: '22x' }, { label: 'Revenue Growth', value: '+36% YoY' }, { label: 'Sector', value: 'Semiconductors' }, { label: 'Tipo', value: 'Monopoly Play' }],
+                        reason: '<strong>Fundamento:</strong> Columna vertebral tecnológica mundial. Monopolio en manufactura de silicio para chips de IA. Crecimiento garantizado en la próxima década.'
+                    },
+                    {
+                        symbol: 'AMZN', name: 'Amazon.com', tvSymbol: 'NASDAQ:AMZN',
+                        badge: 'buy', badgeText: 'Comprar',
+                        metrics: [{ label: 'P/E Forward', value: '28x' }, { label: 'AWS Growth', value: '+19% YoY' }, { label: 'Sector', value: 'Tech / Cloud' }, { label: 'Tipo', value: 'Platform Play' }],
+                        reason: '<strong>Fundamento:</strong> El negocio Cloud (AWS) y el área de Publicidad Digital expanden márgenes de manera persistente año a año.'
+                    }
+                ],
+                crypto: [
+                    {
+                        symbol: 'LINK', name: 'Chainlink', tvSymbol: 'BINANCE:LINKUSDT',
+                        badge: 'strong-buy', badgeText: 'Compra Fuerte',
+                        metrics: [{ label: 'Sector', value: 'Oracles / RWA' }, { label: 'Adopción', value: '75% DeFi' }, { label: 'Tipo', value: 'Infraestructura' }, { label: 'Desde ATH', value: '~-57%' }],
+                        reason: '<strong>Fundamento:</strong> Oráculo monopolista clave para la tokenización institucional de activos (RWA) a largo plazo. Su tecnología CCIP es el estándar interbancario.'
+                    },
+                    {
+                        symbol: 'ADA', name: 'Cardano', tvSymbol: 'BINANCE:ADAUSDT',
+                        badge: 'buy', badgeText: 'Comprar',
+                        metrics: [{ label: 'Sector', value: 'L1 Blockchain' }, { label: 'Governance', value: 'On-chain' }, { label: 'Tipo', value: 'Ecosystem Play' }, { label: 'Desde ATH', value: '~-64%' }],
+                        reason: '<strong>Fundamento:</strong> Enfoque académico y seguridad matemática insuperable. Gobernanza 100% descentralizada ideal para resguardar valor por años.'
+                    },
+                    {
+                        symbol: 'AVAX', name: 'Avalanche', tvSymbol: 'BINANCE:AVAXUSDT',
+                        badge: 'speculative', badgeText: 'Especulativo',
+                        metrics: [{ label: 'Sector', value: 'L1 + Subnets' }, { label: 'Partnerships', value: 'JP Morgan, Citi' }, { label: 'Tipo', value: 'Institutional DeFi' }, { label: 'Desde ATH', value: '~-67%' }],
+                        reason: '<strong>Fundamento:</strong> Su infraestructura de subredes personalizadas es la favorita de Wall Street para el procesamiento institucional de transacciones.'
+                    }
+                ]
+            },
+            short: {
+                argentina: [
+                    {
+                        symbol: 'BCBA:GGAL', name: 'Grupo Financiero Galicia', tvSymbol: 'BCBA:GGAL',
+                        badge: 'speculative', badgeText: 'Trading / Momentum',
+                        metrics: [{ label: 'Volatilidad', value: 'Alta' }, { label: 'Beta vs Merval', value: '1.25' }, { label: 'Sector', value: 'Bancario' }, { label: 'Tipo', value: 'Momentum' }],
+                        reason: '<strong>Trading:</strong> Activo de alta liquidez ideal para especulación de corto plazo. Presenta fuerte momentum alcista con volumen creciente.'
+                    },
+                    {
+                        symbol: 'BCBA:YPFD', name: 'YPF S.A.', tvSymbol: 'BCBA:YPFD',
+                        badge: 'buy', badgeText: 'Comprar Corto',
+                        metrics: [{ label: 'RSI (14)', value: '38 (Cerca Sobrevendido)' }, { label: 'Soporte', value: 'ARS 28.500' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Rebote Técnico' }],
+                        reason: '<strong>Trading:</strong> YPF muestra una corrección de corto plazo hacia la media de 50 días. Oportunidad de entrada para capturar rebote técnico inminente.'
+                    },
+                    {
+                        symbol: 'BCBA:PAMP', name: 'Pampa Energía', tvSymbol: 'BCBA:PAMP',
+                        badge: 'buy', badgeText: 'Comprar Corto',
+                        metrics: [{ label: 'RSI (14)', value: '45 (Neutral)' }, { label: 'Vol. 24h', value: 'Muy Alto' }, { label: 'Sector', value: 'Energía' }, { label: 'Tipo', value: 'Ruptura (Breakout)' }],
+                        reason: '<strong>Trading:</strong> Consolidando patrón de bandera alcista en velas de 4 horas. Excelente relación riesgo/beneficio para una operación de 1-2 semanas.'
+                    }
+                ],
+                usa: [
+                    {
+                        symbol: 'NVDA', name: 'NVIDIA Corp.', tvSymbol: 'NASDAQ:NVDA',
+                        badge: 'speculative', badgeText: 'Trading Rápido',
+                        metrics: [{ label: 'RSI (14)', value: '68 (Alto)' }, { label: 'Volatilidad', value: 'Extrema' }, { label: 'Sector', value: 'Tech / Chips' }, { label: 'Tipo', value: 'Momentum / Swing' }],
+                        reason: '<strong>Trading:</strong> El líder de chips de IA muestra una volatilidad ideal para operaciones intradía o swing trading de 3-5 días tras la presentación de balances.'
+                    },
+                    {
+                        symbol: 'TSLA', name: 'Tesla Inc.', tvSymbol: 'NASDAQ:TSLA',
+                        badge: 'speculative', badgeText: 'Trading / Swing',
+                        metrics: [{ label: 'RSI (14)', value: '32 (Sobrevendido)' }, { label: 'Beta', value: '1.85' }, { label: 'Sector', value: 'Automotriz / IA' }, { label: 'Tipo', value: 'Reversión (Mean Reversion)' }],
+                        reason: '<strong>Trading:</strong> Fuerte sobreventa tras rumores regulatorios. Excelente oportunidad de swing trading buscando un testeo de la resistencia superior.'
+                    },
+                    {
+                        symbol: 'COIN', name: 'Coinbase Global', tvSymbol: 'NASDAQ:COIN',
+                        badge: 'speculative', badgeText: 'Trading / Beta',
+                        metrics: [{ label: 'Beta vs BTC', value: '2.10' }, { label: 'RSI (14)', value: '55 (Neutral)' }, { label: 'Sector', value: 'Fintech / Crypto' }, { label: 'Tipo', value: 'High Beta Play' }],
+                        reason: '<strong>Trading:</strong> Proxy regulado de alta volatilidad. Ideal para maximizar ganancias de corto plazo apalancándose de los movimientos direccionales de Bitcoin.'
+                    }
+                ],
+                crypto: [
+                    {
+                        symbol: 'SOL', name: 'Solana', tvSymbol: 'BINANCE:SOLUSDT',
+                        badge: 'strong-buy', badgeText: 'Momentum',
+                        metrics: [{ label: 'RSI (14)', value: '62 (Fuerte)' }, { label: 'Vol. 24h', value: '$3.8B' }, { label: 'Tipo', value: 'Momentum Trading' }, { label: 'Desde ATH', value: '~-20%' }],
+                        reason: '<strong>Trading:</strong> Fuerte demanda en el mercado spot. Ruptura de resistencia diagonal descendente. Target técnico de corto plazo en $180.'
+                    },
+                    {
+                        symbol: 'WIF', name: 'dogwifhat', tvSymbol: 'BINANCE:WIFUSDT',
+                        badge: 'speculative', badgeText: 'Especulación Alta',
+                        metrics: [{ label: 'Beta vs SOL', value: '2.40' }, { label: 'RSI (14)', value: '41 (Cerca Sobrevendido)' }, { label: 'Tipo', value: 'Memecoin Swing' }, { label: 'Volatilidad', value: 'Extrema' }],
+                        reason: '<strong>Trading:</strong> Activo de altísima especulación. Ideal para swing trading buscando rebotes rápidos aprovechando la fuerte liquidez de la red Solana.'
+                    },
+                    {
+                        symbol: 'NEAR', name: 'Near Protocol', tvSymbol: 'BINANCE:NEARUSDT',
+                        badge: 'buy', badgeText: 'Comprar Corto',
+                        metrics: [{ label: 'Sector', value: 'L1 + AI' }, { label: 'RSI (14)', value: '35 (Sobrevendido)' }, { label: 'Tipo', value: 'Reversión' }, { label: 'Desde ATH', value: '~-71%' }],
+                        reason: '<strong>Trading:</strong> Compresión de volatilidad cerca de soporte mayor histórico. Estocástico marcando sobreventa con divergencia alcista en temporalidad diaria.'
+                    }
+                ]
+            }
         };
+
+        const activeOpps = opportunities[currentHorizon];
 
         function renderOppGrid(containerId, opps) {
             const container = document.getElementById(containerId);
@@ -540,15 +605,13 @@
                 `;
             }).join('');
 
-            // Programmatically load TradingView widgets so the browser actually executes the scripts
+            // Programmatically load TradingView widgets
             opps.forEach(opp => {
                 const chartId = `chart-${containerId}-${opp.symbol.replace(/[^a-zA-Z0-9]/g, '-')}`;
                 const chartEl = document.getElementById(chartId);
                 if (!chartEl) return;
-
                 const widgetContainer = chartEl.querySelector('.tradingview-widget-container');
                 if (!widgetContainer) return;
-
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
@@ -565,15 +628,24 @@
                     "largeChartUrl": "",
                     "noTimeScale": false
                 });
-
                 widgetContainer.appendChild(script);
             });
         }
 
-        renderOppGrid('arg-opportunities', opportunities.argentina);
-        renderOppGrid('us-opportunities', opportunities.usa);
-        renderOppGrid('crypto-opportunities', opportunities.crypto);
+        renderOppGrid('arg-opportunities', activeOpps.argentina);
+        renderOppGrid('us-opportunities', activeOpps.usa);
+        renderOppGrid('crypto-opportunities', activeOpps.crypto);
     }
+
+    // Bind Toggle Switch
+    document.querySelectorAll('.horizon-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentHorizon = e.target.dataset.horizon;
+            document.querySelectorAll('.horizon-toggle').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            renderOpportunities();
+        });
+    });
 
     // ── Render: News (RSS) ──
     async function loadNewsFeed(rssUrl, containerId, cacheKey, errorMsg) {
