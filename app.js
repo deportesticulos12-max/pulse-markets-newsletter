@@ -657,6 +657,20 @@
         }
 
         try {
+            // Fetch live funding rates from Binance directly
+            let btcFunding = 'Desconocido';
+            let ethFunding = 'Desconocido';
+            try {
+                const [btcRes, ethRes] = await Promise.all([
+                    fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT').then(r => r.json()),
+                    fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT').then(r => r.json())
+                ]);
+                if (btcRes && btcRes.lastFundingRate) btcFunding = (parseFloat(btcRes.lastFundingRate) * 100).toFixed(4) + '%';
+                if (ethRes && ethRes.lastFundingRate) ethFunding = (parseFloat(ethRes.lastFundingRate) * 100).toFixed(4) + '%';
+            } catch (e) {
+                console.warn('[PulseMarkets] Could not fetch Binance funding rates', e);
+            }
+
             // Gather context data for the prompt
             const cryptoNews = Cache.get('crypto_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
             const usNews = Cache.get('us_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
@@ -703,19 +717,19 @@ PAUTAS CRÍTICAS DE CONTEXTO:
 - REGLAS DE LARGO PLAZO (VALUACIÓN DE VALOR Y FUNDAMENTALES): Si el Horizonte Temporal Solicitado es LARGO PLAZO, la justificación ("reason") y análisis de cada oportunidad cripto debe evaluar estrictamente:
   1) El suministro de tokens (Total Supply vs Max Supply), especificando si ya alcanzó su límite máximo o si existe riesgo de dilución por emisiones futuras.
   2) Próximas actualizaciones tecnológicas programadas en su roadmap y cómo afectarán su ecosistema en cuanto a escalabilidad, seguridad o descentralización.
-  3) Grado de adopción institucional (adquisición por tesorerías corporativas, fondos de inversión regulados o flujos en ETFs).
-  4) Indicadores fundamentales clave de previsión de valor como el MVRV Ratio (para evaluar sobreventa/sobrecompra histórica), Ley de Metcalfe (direcciones activas y crecimiento de red), ratio NVT o niveles de soporte macroeconómicos históricos.
-- REGLA DE REALISMO ABSOLUTO Y DATOS PRECISOS: Queda terminantemente PROHIBIDO usar lenguaje de simulación ("no tengo datos en tiempo real", "este es un escenario hipotético"). Sin embargo, TAMBIÉN ESTÁ PROHIBIDO inventar, adivinar o suponer cifras. Si mencionas flujos de ETFs o Funding Rates, debes dar los DATOS EXACTOS Y REALES buscando la información. Jamás digas "es probable que hayan salido fondos", en su lugar di "en la última semana hubieron salidas netas por X cantidad" o básate estrictamente en los titulares provistos si no encuentras el dato. Redacta el informe con tono analítico profesional firme y 100% seguro.
-- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel (por ejemplo, tensiones entre EE.UU. e Irán, guerras comerciales, conflictos en Europa, etc.) basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
+  3) Grado de adopción institucional según las noticias y alianzas corporativas.
+- REGLA DE REALISMO ABSOLUTO: Redacta el informe con tono analítico profesional firme y 100% seguro. No pidas disculpas por no tener datos ni digas "no se encontraron datos en los resultados de la búsqueda".
+- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
-- BUSCA DATOS REALES EXACTOS del flujo de capitales en los **ETF de Criptomonedas al contado (principalmente Spot Bitcoin y Ethereum ETFs)** en Wall Street. Debes plasmar números específicos recientes (entradas/salidas netas en millones). ESTÁ PROHIBIDO adivinar, suponer o decir "es probable".
-- Busca e informa la **Tasa de Financiación (Funding Rate)** promedio actual de Bitcoin y Ethereum. Explica si es neutral, positiva o negativa basándote en el dato exacto actual. No deduzcas la tasa basándote solo en el precio, usa el dato real.
+- DATOS DE DERIVADOS EN VIVO (MANDATORIO): Las **Tasas de Financiación (Funding Rates)** actuales y exactas extraídas directamente del exchange Binance en este momento son: **BTC: ${btcFunding} | ETH: ${ethFunding}**.
+  Debes plasmar ESTOS NÚMEROS EXACTOS en la sección de Análisis On-Chain y Derivados. Explica qué significan: si la tasa es cercana a 0.0100%, es neutral. Si es mucho más alta, indica exceso de apalancamiento en largos (compras) y riesgo de corrección. Si es negativa, indica exceso de apalancamiento en cortos (ventas).
+- PROHIBICIÓN DE DATOS PREMIUM: Queda terminantemente prohibido pedir disculpas por no encontrar o mencionar el volumen de entradas/salidas de los ETF de Bitcoin, ni los ratios MVRV o NVT. No los busques ni los menciones porque es información premium. Evalúa el interés institucional basándote *únicamente* en las noticias provistas.
 
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
 1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
-2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre. Mención a la acumulación institucional de Oro y demanda global de Cobre)
-3. FLUJO DE FONDOS INSTITUCIONALES / ETF CRYPTO (Entradas y salidas netas de los ETF de BTC y ETH para determinar el comportamiento de los inversores institucionales en Wall Street)
-4. ANÁLISIS ON-CHAIN Y TÉCNICO (Situación actual basada en el precio de BTC, F&G e de las **Tasas de Financiación (Funding Rates)** para evaluar el nivel de apalancamiento)
+2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre)
+3. COMPORTAMIENTO INSTITUCIONAL (Análisis de grandes movimientos y adopción basándote únicamente en los titulares de noticias. NO menciones flujos específicos de ETF porque no hay datos, pero analiza el sentimiento corporativo)
+4. ANÁLISIS TÉCNICO Y DERIVADOS (Situación actual basada en el precio, el Fear & Greed y las **Tasas de Financiación Reales en Binance provistas arriba (BTC: ${btcFunding}, ETH: ${ethFunding})** para evaluar el nivel de apalancamiento)
 5. SENTIMIENTO DEL MERCADO
 6. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
 7. RECOMENDACIONES TÁCTICAS
