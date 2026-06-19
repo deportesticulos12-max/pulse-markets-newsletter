@@ -705,11 +705,11 @@ PAUTAS CRÍTICAS DE CONTEXTO:
   2) Próximas actualizaciones tecnológicas programadas en su roadmap y cómo afectarán su ecosistema en cuanto a escalabilidad, seguridad o descentralización.
   3) Grado de adopción institucional (adquisición por tesorerías corporativas, fondos de inversión regulados o flujos en ETFs).
   4) Indicadores fundamentales clave de previsión de valor como el MVRV Ratio (para evaluar sobreventa/sobrecompra histórica), Ley de Metcalfe (direcciones activas y crecimiento de red), ratio NVT o niveles de soporte macroeconómicos históricos.
-- REGLA DE REALISMO ABSOLUTO: Queda terminantemente PROHIBIDO usar lenguaje de simulación, descargos de responsabilidad ("no tengo datos en tiempo real", "este es un escenario hipotético", "se simula") o excusas sobre limitaciones de navegación. Debes asumir que los datos de precios proveídos arriba y la información que deduzcas de los titulares RSS (como Cointelegraph e Investing.com) son los hechos reales y actuales del día. Redacta el informe con tono analítico profesional firme y 100% seguro.
+- REGLA DE REALISMO ABSOLUTO Y DATOS PRECISOS: Queda terminantemente PROHIBIDO usar lenguaje de simulación ("no tengo datos en tiempo real", "este es un escenario hipotético"). Sin embargo, TAMBIÉN ESTÁ PROHIBIDO inventar, adivinar o suponer cifras. Si mencionas flujos de ETFs o Funding Rates, debes dar los DATOS EXACTOS Y REALES buscando la información. Jamás digas "es probable que hayan salido fondos", en su lugar di "en la última semana hubieron salidas netas por X cantidad" o básate estrictamente en los titulares provistos si no encuentras el dato. Redacta el informe con tono analítico profesional firme y 100% seguro.
 - Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel (por ejemplo, tensiones entre EE.UU. e Irán, guerras comerciales, conflictos en Europa, etc.) basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
-- Investiga y analiza el flujo de capitales en los **ETF de Criptomonedas al contado (principalmente Spot Bitcoin y Ethereum ETFs)** en Wall Street (entradas netas o salidas netas recientes). Utiliza esta información para explicar si el capital institucional está acumulando (comprando) o distribuyendo (vendiendo) activos digitales en los mercados regulados tradicionales.
-- Mide y analiza la **Tasa de Financiación (Funding Rate)** promedio de Bitcoin y Ethereum en los principales mercados de contratos futuros perpetuos (como Binance, OKX y Bybit). Explica si la tasa es neutral (cercana al 0.01% cada 8 horas), muy positiva (apalancamiento alcista/compras agresivas con riesgo de cascada de liquidaciones) o negativa (sentimiento bajista dominante/predominio de shorts). Deducí su estado actual con base en los movimientos de precio y titulares de Cointelegraph provistos arriba, presentándolo como un dato real y firme, sin decir nunca que es una simulación.
+- BUSCA DATOS REALES EXACTOS del flujo de capitales en los **ETF de Criptomonedas al contado (principalmente Spot Bitcoin y Ethereum ETFs)** en Wall Street. Debes plasmar números específicos recientes (entradas/salidas netas en millones). ESTÁ PROHIBIDO adivinar, suponer o decir "es probable".
+- Busca e informa la **Tasa de Financiación (Funding Rate)** promedio actual de Bitcoin y Ethereum. Explica si es neutral, positiva o negativa basándote en el dato exacto actual. No deduzcas la tasa basándote solo en el precio, usa el dato real.
 
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
 1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
@@ -767,7 +767,8 @@ FORMATO GENERAL:
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: prompt }] }],
-                            generationConfig: { temperature: 0.3 }
+                            generationConfig: { temperature: 0.3 },
+                            tools: [{ googleSearch: {} }]
                         })
                     });
 
