@@ -748,7 +748,7 @@ Si el Horizonte Temporal solicitado es CORTO PLAZO:
 - Categoría 2: **Acciones EE.UU.**: Enfócate en activos de alto volumen y volatilidad listos para rupturas técnicas o rebotes intradiarios (ej: Tesla, NVIDIA, Coinbase, MicroStrategy).
 - Categoría 3: **Acciones Argentinas**: Elige papeles con alta volatilidad y liquidez local para trading rápido (ej: Grupo Galicia, Banco Macro, YPF, Pampa Energía).
 
-IMPORTANTE: Los precios objetivos (targets) de corto plazo de las criptos deben ser realistas en relación a su cotización real actual (por ejemplo, si SOL cotiza en $70, un target de corto plazo coherente es $78-$82, jamás pongas targets desproporcionados como $180 en corto plazo).
+IMPORTANTE: Si el Horizonte Temporal es CORTO PLAZO, es OBLIGATORIO que para CADA oportunidad recomendada (Crypto, EE.UU., Argentina) definas explícitamente en tu justificación ("reason") la zona de entrada sugerida y la zona de venta esperada. Los precios objetivos deben ser realistas en relación a su cotización real actual (por ejemplo, si SOL cotiza en $70, indica claramente algo como: "Entrada en $68-$70 | Target: $78-$82 | Stop: $64", jamás pongas targets desproporcionados para el corto plazo).
 
 Al final de tu respuesta, debes incluir una sección JSON estricta y delimitada por etiquetas XML <opps_json>...</opps_json> para que el sistema procese y renderice dinámicamente estas oportunidades en las tarjetas interactivas de TradingView de la web.
 Usa exactamente esta estructura JSON dentro de las etiquetas:
