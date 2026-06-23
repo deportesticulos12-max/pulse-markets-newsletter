@@ -748,21 +748,32 @@ Si el Horizonte Temporal solicitado es CORTO PLAZO:
 - Categoría 2: **Acciones EE.UU.**: Enfócate en activos de alto volumen y volatilidad listos para rupturas técnicas o rebotes intradiarios (ej: Tesla, NVIDIA, Coinbase, MicroStrategy).
 - Categoría 3: **Acciones Argentinas**: Elige papeles con alta volatilidad y liquidez local para trading rápido (ej: Grupo Galicia, Banco Macro, YPF, Pampa Energía).
 
-IMPORTANTE: Si el Horizonte Temporal es CORTO PLAZO, es OBLIGATORIO que para CADA oportunidad recomendada (Crypto, EE.UU., Argentina) definas explícitamente en tu justificación ("reason") la zona de entrada sugerida y la zona de venta esperada. Los precios objetivos deben ser realistas en relación a su cotización real actual (por ejemplo, si SOL cotiza en $70, indica claramente algo como: "Entrada en $68-$70 | Target: $78-$82 | Stop: $64", jamás pongas targets desproporcionados para el corto plazo).
+IMPORTANTE: Si el Horizonte Temporal es CORTO PLAZO, es OBLIGATORIO que para CADA oportunidad recomendada (Crypto, EE.UU., Argentina) incluyas explícitamente la zona de entrada sugerida, el precio objetivo (Target) y el Stop Loss. ESTOS DATOS DEBEN IR DENTRO DEL ARRAY "metrics" (NUNCA en el texto de "reason"). Los precios objetivos deben ser realistas en relación a la cotización actual. Jamás pongas targets desproporcionados para el corto plazo.
 
 Al final de tu respuesta, debes incluir una sección JSON estricta y delimitada por etiquetas XML <opps_json>...</opps_json> para que el sistema procese y renderice dinámicamente estas oportunidades en las tarjetas interactivas de TradingView de la web.
-Usa exactamente esta estructura JSON dentro de las etiquetas:
+${targetHorizon === 'short' ? `Usa exactamente esta estructura JSON dentro de las etiquetas (Nota cómo Entrada, Target y Stop van obligatoriamente en metrics):
 {
   "crypto": [
-    { "symbol": "SOL", "name": "Solana", "tvSymbol": "BINANCE:SOLUSDT", "badge": "strong-buy", "badgeText": "Compra Fuerte", "metrics": [{"label": "RSI (14)", "value": "38"}, {"label": "Desde ATH", "value": "-73%"}], "reason": "Razón fundamental/técnica adaptada al horizonte." }
+    { "symbol": "SOL", "name": "Solana", "tvSymbol": "BINANCE:SOLUSDT", "badge": "strong-buy", "badgeText": "Compra Fuerte", "metrics": [{"label": "Entrada", "value": "$68-$70"}, {"label": "Target", "value": "$80"}, {"label": "Stop", "value": "$64"}], "reason": "Razón técnica del trade." }
   ],
   "usa": [
-    { "symbol": "NVDA", "name": "NVIDIA Corp.", "tvSymbol": "NASDAQ:NVDA", "badge": "speculative", "badgeText": "Trading", "metrics": [{"label": "Volatilidad", "value": "Alta"}], "reason": "Razón adaptada." }
+    { "symbol": "NVDA", "name": "NVIDIA Corp.", "tvSymbol": "NASDAQ:NVDA", "badge": "speculative", "badgeText": "Trading", "metrics": [{"label": "Entrada", "value": "$120"}, {"label": "Target", "value": "$135"}, {"label": "Stop", "value": "$115"}], "reason": "Razón técnica del trade." }
   ],
   "argentina": [
-    { "symbol": "BCBA:GGAL", "name": "Grupo Galicia", "tvSymbol": "BCBA:GGAL", "badge": "buy", "badgeText": "Comprar", "metrics": [{"label": "Beta", "value": "1.25"}], "reason": "Razón adaptada." }
+    { "symbol": "BCBA:GGAL", "name": "Grupo Galicia", "tvSymbol": "BCBA:GGAL", "badge": "buy", "badgeText": "Comprar", "metrics": [{"label": "Entrada", "value": "ARS 4500"}, {"label": "Target", "value": "ARS 5200"}, {"label": "Stop", "value": "ARS 4200"}], "reason": "Razón técnica del trade." }
   ]
-}
+}` : `Usa exactamente esta estructura JSON dentro de las etiquetas:
+{
+  "crypto": [
+    { "symbol": "SOL", "name": "Solana", "tvSymbol": "BINANCE:SOLUSDT", "badge": "strong-buy", "badgeText": "Acumular", "metrics": [{"label": "Sector", "value": "L1"}, {"label": "Desde ATH", "value": "-73%"}], "reason": "Razón fundamental y macro de largo plazo." }
+  ],
+  "usa": [
+    { "symbol": "NVDA", "name": "NVIDIA Corp.", "tvSymbol": "NASDAQ:NVDA", "badge": "strong-buy", "badgeText": "Largo Plazo", "metrics": [{"label": "Sector", "value": "IA"}, {"label": "P/E", "value": "45"}], "reason": "Razón fundamental." }
+  ],
+  "argentina": [
+    { "symbol": "BCBA:GGAL", "name": "Grupo Galicia", "tvSymbol": "BCBA:GGAL", "badge": "buy", "badgeText": "Acumular", "metrics": [{"label": "P/BV", "value": "1.2"}], "reason": "Razón macroeconómica." }
+  ]
+}`}
 
 FORMATO GENERAL:
 - Utiliza Markdown para la estructura (títulos H2, listas, negritas).
