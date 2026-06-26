@@ -423,7 +423,7 @@
             document.getElementById('m-fng-chg').innerHTML = `<span style="color:${color};">${label}</span>`;
             // Merval — try to fetch from Yahoo Finance via AllOrigins proxy
             try {
-                const mervalProxy = await fetchJSON('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/%5EMERGE.BA?interval=1d&range=1d'));
+                const mervalProxy = await fetchJSON('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/%5EMERV?interval=1d&range=1d'));
                 if (mervalProxy && mervalProxy.chart && mervalProxy.chart.result) {
                     const mervalMeta = mervalProxy.chart.result[0].meta;
                     const mervalCurrentPrice = mervalMeta.regularMarketPrice;
