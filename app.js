@@ -421,28 +421,6 @@
             // Overview metric
             document.getElementById('m-fng').textContent = score;
             document.getElementById('m-fng-chg').innerHTML = `<span style="color:${color};">${label}</span>`;
-            // Merval — try to fetch from Yahoo Finance via AllOrigins proxy
-            try {
-                const mervalProxy = await fetchJSON('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/%5EMERV?interval=1d&range=1d'));
-                if (mervalProxy && mervalProxy.chart && mervalProxy.chart.result) {
-                    const mervalMeta = mervalProxy.chart.result[0].meta;
-                    const mervalCurrentPrice = mervalMeta.regularMarketPrice;
-                    const mervalPrevClose = mervalMeta.chartPreviousClose || mervalMeta.previousClose;
-                    document.getElementById('m-merval').textContent = mervalCurrentPrice.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-                    if (mervalPrevClose) {
-                        const mervalChgPct = ((mervalCurrentPrice - mervalPrevClose) / mervalPrevClose) * 100;
-                        const chgEl = document.getElementById('m-merval-chg');
-                        chgEl.className = `metric-change ${mervalChgPct >= 0 ? 'positive' : 'negative'}`;
-                        chgEl.innerHTML = `${mervalChgPct >= 0 ? '▲' : '▼'} ${mervalChgPct.toFixed(2)}%`;
-                    }
-                } else {
-                    throw new Error('Invalid Merval proxy response');
-                }
-            } catch (mervalErr) {
-                console.warn('[PulseMarkets] Could not fetch Merval from proxy, showing placeholder:', mervalErr);
-                document.getElementById('m-merval').textContent = '—';
-                document.getElementById('m-merval-chg').innerHTML = '<span style="color:var(--text-muted);">Ver gráfico TradingView</span>';
-            }
 
             // FNG Display
             document.getElementById('fng-display').innerHTML = `
@@ -695,7 +673,6 @@
             const argNews = Cache.get('arg_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
             
             const btcPrice = document.getElementById('m-btc').innerText;
-            const mervalPrice = document.getElementById('m-merval').innerText;
             const fng = document.getElementById('m-fng').innerText;
             const riesgo = document.getElementById('m-riesgo').innerText;
 
@@ -719,7 +696,6 @@ Genera un análisis sintético, directo, basado en los siguientes datos en tiemp
 DATOS ACTUALES DEL MERCADO:
 - Fecha del reporte: ${currentDateStr}
 - Precio BTC: ${btcPrice}
-- Índice Merval: ${mervalPrice}
 - Fear & Greed Index: ${fng}
 - Riesgo País Argentina: ${riesgo}
 - Precios y Estadísticas reales de Criptomonedas hoy (CoinGecko):
