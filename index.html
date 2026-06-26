@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Markdown Parser for AI Output -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=5.2">
 </head>
 <body>
     <!-- Ambient Background -->
@@ -178,7 +178,7 @@
                 <!-- Market Overview Widget -->
                 <div class="card glass-card">
                     <h3 class="card-title">🌍 Vista General de Mercados</h3>
-                    <div class="tv-widget-container" style="height:460px;">
+                    <div class="tv-widget-container" style="height:520px;">
                         <div class="tradingview-widget-container">
                             <div class="tradingview-widget-container__widget"></div>
                             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
@@ -301,7 +301,7 @@
                 <!-- Argentine Stocks (TradingView Screener) -->
                 <div class="card glass-card">
                     <h3 class="card-title">🏆 Panel Líder del Merval</h3>
-                    <div class="tv-widget-container" style="height:480px;">
+                    <div class="tv-widget-container" style="height:560px;">
                         <div class="tradingview-widget-container">
                             <div class="tradingview-widget-container__widget"></div>
                             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
@@ -415,7 +415,7 @@
                 <!-- US Top Stocks -->
                 <div class="card glass-card">
                     <h3 class="card-title">🏆 Top Acciones de EE.UU.</h3>
-                    <div class="tv-widget-container" style="height:480px;">
+                    <div class="tv-widget-container" style="height:560px;">
                         <div class="tradingview-widget-container">
                             <div class="tradingview-widget-container__widget"></div>
                             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
@@ -485,7 +485,7 @@
                 <!-- Crypto Table (from CoinGecko) -->
                 <div class="card glass-card">
                     <h3 class="card-title">📊 Top Criptomonedas por Market Cap <span class="data-source">vía CoinGecko</span></h3>
-                    <div class="stocks-table" id="crypto-table">
+                    <div class="stocks-table scrollable" id="crypto-table">
                         <div class="table-loading"><div class="spinner"></div> Cargando datos de CoinGecko...</div>
                     </div>
                 </div>
@@ -630,6 +630,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=5.1"></script>
+    <script src="app.js?v=5.2"></script>
 </body>
 </html>

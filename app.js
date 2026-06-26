@@ -351,7 +351,7 @@
                         <th>#</th><th>Token</th><th>Precio</th><th>24h</th><th>7d</th><th>Market Cap</th><th>Vol. 24h</th>
                     </tr></thead>
                     <tbody>
-                        ${coins.slice(0, 15).map((c, i) => `
+                        ${coins.slice(0, 50).map((c, i) => `
                             <tr>
                                 <td style="color:var(--text-muted);">${i + 1}</td>
                                 <td>
@@ -421,10 +421,28 @@
             // Overview metric
             document.getElementById('m-fng').textContent = score;
             document.getElementById('m-fng-chg').innerHTML = `<span style="color:${color};">${label}</span>`;
-            const fngMervalEl = document.getElementById('m-merval');
-            // Merval placeholder since no free API — show via TradingView
-            fngMervalEl.textContent = '—';
-            document.getElementById('m-merval-chg').innerHTML = '<span style="color:var(--text-muted);">Ver gráfico TradingView</span>';
+            // Merval — try to fetch from Yahoo Finance via AllOrigins proxy
+            try {
+                const mervalProxy = await fetchJSON('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/%5EMERGE.BA?interval=1d&range=1d'));
+                if (mervalProxy && mervalProxy.chart && mervalProxy.chart.result) {
+                    const mervalMeta = mervalProxy.chart.result[0].meta;
+                    const mervalCurrentPrice = mervalMeta.regularMarketPrice;
+                    const mervalPrevClose = mervalMeta.chartPreviousClose || mervalMeta.previousClose;
+                    document.getElementById('m-merval').textContent = mervalCurrentPrice.toLocaleString('es-AR', { maximumFractionDigits: 0 });
+                    if (mervalPrevClose) {
+                        const mervalChgPct = ((mervalCurrentPrice - mervalPrevClose) / mervalPrevClose) * 100;
+                        const chgEl = document.getElementById('m-merval-chg');
+                        chgEl.className = `metric-change ${mervalChgPct >= 0 ? 'positive' : 'negative'}`;
+                        chgEl.innerHTML = `${mervalChgPct >= 0 ? '▲' : '▼'} ${mervalChgPct.toFixed(2)}%`;
+                    }
+                } else {
+                    throw new Error('Invalid Merval proxy response');
+                }
+            } catch (mervalErr) {
+                console.warn('[PulseMarkets] Could not fetch Merval from proxy, showing placeholder:', mervalErr);
+                document.getElementById('m-merval').textContent = '—';
+                document.getElementById('m-merval-chg').innerHTML = '<span style="color:var(--text-muted);">Ver gráfico TradingView</span>';
+            }
 
             // FNG Display
             document.getElementById('fng-display').innerHTML = `
