@@ -492,12 +492,85 @@
         }
     }
 
+    async function loadCombinedNewsFeed(rssUrls, containerId, cacheKey, errorMsg) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        try {
+            const cached = Cache.get(cacheKey);
+            let combinedItems = [];
+            
+            if (cached) {
+                combinedItems = cached;
+            } else {
+                const fetchPromises = rssUrls.map(url => 
+                    fetchJSON(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`)
+                );
+                const results = await Promise.allSettled(fetchPromises);
+                
+                results.forEach(result => {
+                    if (result.status === 'fulfilled' && result.value && result.value.items) {
+                        combinedItems = combinedItems.concat(result.value.items);
+                    }
+                });
+
+                if (combinedItems.length === 0) throw new Error('No items found');
+
+                // Sort by date descending
+                combinedItems.sort((a, b) => {
+                    const dateA = new Date(a.pubDate.replace(' ', 'T')).getTime();
+                    const dateB = new Date(b.pubDate.replace(' ', 'T')).getTime();
+                    return dateB - dateA;
+                });
+                
+                Cache.set(cacheKey, combinedItems);
+            }
+
+            container.innerHTML = combinedItems.slice(0, 15).map(item => {
+                let dateStr = '';
+                try {
+                    const d = new Date(item.pubDate.replace(' ', 'T'));
+                    if (!isNaN(d.getTime())) {
+                        dateStr = d.toLocaleDateString('es-AR', {
+                            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                        });
+                    }
+                } catch (e) {}
+
+                // Extract source name roughly from link if possible
+                let sourceUrl = '';
+                try {
+                    sourceUrl = new URL(item.link).hostname.replace('www.', '');
+                } catch (e) {}
+                
+                const sourceBadge = sourceUrl ? `<span style="color:var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">${sourceUrl}</span>` : '';
+
+                return `
+                    <a href="${item.link}" target="_blank" class="rss-news-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            ${dateStr ? `<span class="rss-news-date">${dateStr}</span>` : ''}
+                            ${sourceBadge}
+                        </div>
+                        <span class="rss-news-title">${item.title}</span>
+                        <span class="rss-news-desc">${item.description.replace(/<[^>]*>?/gm, '')}</span>
+                    </a>
+                `;
+            }).join('');
+        } catch (e) {
+            console.error('RSS Combined News Error:', e);
+            renderError(containerId, errorMsg, () => loadCombinedNewsFeed(rssUrls, containerId, cacheKey, errorMsg));
+        }
+    }
+
     async function loadAllNews() {
         await Promise.allSettled([
             loadNewsFeed('https://cointelegraph.com/rss', 'rss-crypto-container', 'crypto_news', 'No se pudieron cargar noticias crypto.'),
             loadNewsFeed('https://es.investing.com/rss/market_overview.rss', 'rss-us-container', 'us_news', 'No se pudieron cargar noticias globales.'),
             loadNewsFeed('https://www.ambito.com/rss/economia.xml', 'rss-news-container', 'arg_news', 'No se pudieron cargar noticias de Argentina.'),
-            loadNewsFeed('https://cointelegraph.com/rss/tag/regulation', 'rss-politics-container', 'politics_news', 'No se pudo cargar el feed de regulación.')
+            loadCombinedNewsFeed([
+                'https://thehill.com/homenews/senate/feed/',
+                'https://cointelegraph.com/rss/tag/regulation'
+            ], 'rss-politics-container', 'politics_senate_news', 'No se pudo cargar el feed de regulación.')
         ]);
     }
 
