@@ -496,7 +496,8 @@
         await Promise.allSettled([
             loadNewsFeed('https://cointelegraph.com/rss', 'rss-crypto-container', 'crypto_news', 'No se pudieron cargar noticias crypto.'),
             loadNewsFeed('https://es.investing.com/rss/market_overview.rss', 'rss-us-container', 'us_news', 'No se pudieron cargar noticias globales.'),
-            loadNewsFeed('https://www.ambito.com/rss/economia.xml', 'rss-news-container', 'arg_news', 'No se pudieron cargar noticias de Argentina.')
+            loadNewsFeed('https://www.ambito.com/rss/economia.xml', 'rss-news-container', 'arg_news', 'No se pudieron cargar noticias de Argentina.'),
+            loadNewsFeed('https://cointelegraph.com/rss/tag/regulation', 'rss-politics-container', 'politics_news', 'No se pudo cargar el feed de regulación.')
         ]);
     }
 
