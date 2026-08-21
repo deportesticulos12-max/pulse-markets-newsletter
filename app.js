@@ -1300,7 +1300,15 @@ FORMATO GENERAL:
             const fng = document.getElementById('m-fng')?.innerText || 'N/A';
             const riesgo = document.getElementById('m-riesgo')?.innerText || 'N/A';
             
-            const systemContext = `ESTADO ACTUAL DEL MERCADO (No menciones que tienes estos datos a menos que sea relevante):\nBTC: ${btcPrice}, Dólar Blue: ${bluePrice}, Fear&Greed: ${fng}, Riesgo País: ${riesgo}. Responde como un analista financiero conciso.`;
+            const cryptoMarkets = Cache.get('crypto_markets');
+            let cryptoPricesCtx = 'No data';
+            if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
+                cryptoPricesCtx = cryptoMarkets.slice(0, 50).map(c => 
+                    `${c.symbol.toUpperCase()}: $${c.current_price} (ATH: $${c.ath})`
+                ).join(' | ');
+            }
+
+            const systemContext = `ESTADO ACTUAL DEL MERCADO (No menciones explícitamente que te estoy pasando estos datos a menos que sea útil para responder al usuario. Si te preguntan precios, utiliza esta información):\nBTC: ${btcPrice}, Dólar Blue: ${bluePrice}, Fear&Greed: ${fng}, Riesgo País: ${riesgo}.\nPrecios de Top 50 Cryptos en este segundo: ${cryptoPricesCtx}\n\nResponde como un analista financiero conciso.`;
             
             if (chatHistory.length === 0) {
                 chatHistory.push({ role: 'user', parts: [{ text: systemContext + '\n\nPregunta del usuario: ' + text }] });
