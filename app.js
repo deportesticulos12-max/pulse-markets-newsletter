@@ -1263,8 +1263,96 @@ FORMATO GENERAL:
         });
     }
 
+    // ── Chatbot Logic ──
+    function setupChatbot() {
+        const fab = document.getElementById('chatbot-fab');
+        const windowEl = document.getElementById('chatbot-window');
+        const closeBtn = document.getElementById('chatbot-close');
+        const input = document.getElementById('chatbot-input');
+        const sendBtn = document.getElementById('chatbot-send');
+        const messagesContainer = document.getElementById('chatbot-messages');
+
+        if (!fab || !windowEl) return;
+
+        let chatHistory = [];
+
+        fab.addEventListener('click', () => {
+            windowEl.classList.toggle('open');
+            if (windowEl.classList.contains('open')) input.focus();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            windowEl.classList.remove('open');
+        });
+
+        async function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            input.disabled = true;
+            sendBtn.disabled = true;
+            messagesContainer.innerHTML += `<div class="chat-bubble user">${text}</div>`;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            const btcPrice = document.getElementById('m-btc')?.innerText || 'N/A';
+            const bluePrice = document.getElementById('m-blue')?.innerText || 'N/A';
+            const fng = document.getElementById('m-fng')?.innerText || 'N/A';
+            const riesgo = document.getElementById('m-riesgo')?.innerText || 'N/A';
+            
+            const systemContext = `ESTADO ACTUAL DEL MERCADO (No menciones que tienes estos datos a menos que sea relevante):\nBTC: ${btcPrice}, Dólar Blue: ${bluePrice}, Fear&Greed: ${fng}, Riesgo País: ${riesgo}. Responde como un analista financiero conciso.`;
+            
+            if (chatHistory.length === 0) {
+                chatHistory.push({ role: 'user', parts: [{ text: systemContext + '\n\nPregunta del usuario: ' + text }] });
+            } else {
+                chatHistory.push({ role: 'user', parts: [{ text }] });
+            }
+
+            const loadingId = 'loading-' + Date.now();
+            messagesContainer.innerHTML += `<div class="chat-bubble ai" id="${loadingId}">Pensando...</div>`;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: chatHistory })
+                });
+                
+                const data = await res.json();
+                document.getElementById(loadingId).remove();
+
+                if (data.error) throw new Error(data.error.message);
+
+                const aiText = data.candidates[0].content.parts[0].text;
+                chatHistory.push({ role: 'model', parts: [{ text: aiText }] });
+
+                const formattedHtml = aiText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                messagesContainer.innerHTML += `<div class="chat-bubble ai">${formattedHtml}</div>`;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                messagesContainer.innerHTML += `<div class="chat-bubble ai" style="color:var(--accent-rose)">Error de red: ${err.message}.</div>`;
+                chatHistory.pop();
+            } finally {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    }
+
     // ── Init ──
     function init() {
+        setupChatbot();
         setupNavigation();
         setupConfig();
         setupHorizonToggle();
