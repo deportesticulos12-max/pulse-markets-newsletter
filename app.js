@@ -753,9 +753,11 @@
             const cryptoMarkets = Cache.get('crypto_markets');
             let cryptoPricesCtx = 'No data';
             if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
-                cryptoPricesCtx = cryptoMarkets.slice(0, 200).map(c => 
-                    `${c.name} (${c.symbol.toUpperCase()}): Pr=$${c.current_price}, ATH=$${c.ath}, Distancia_al_ATH=${c.ath_change_percentage.toFixed(1)}%`
-                ).join(' | ');
+                cryptoPricesCtx = cryptoMarkets.slice(0, 200).map(c => {
+                    const var24h = c.price_change_percentage_24h?.toFixed(2) || '0';
+                    const var7d = c.price_change_percentage_7d_in_currency?.toFixed(2) || '0';
+                    return `${c.name} (${c.symbol.toUpperCase()}): Pr=$${c.current_price}, Var24h=${var24h}%, Var7d=${var7d}%, ATH=$${c.ath}, Dist_ATH=${c.ath_change_percentage?.toFixed(1)}%`;
+                }).join(' | ');
             }
 
             const currentDateStr = new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -1303,9 +1305,11 @@ FORMATO GENERAL:
             const cryptoMarkets = Cache.get('crypto_markets');
             let cryptoPricesCtx = 'No data';
             if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
-                cryptoPricesCtx = cryptoMarkets.slice(0, 50).map(c => 
-                    `${c.symbol.toUpperCase()}: $${c.current_price} (ATH: $${c.ath})`
-                ).join(' | ');
+                cryptoPricesCtx = cryptoMarkets.slice(0, 50).map(c => {
+                    const var24h = c.price_change_percentage_24h?.toFixed(2) || '0';
+                    const var7d = c.price_change_percentage_7d_in_currency?.toFixed(2) || '0';
+                    return `${c.symbol.toUpperCase()}: $${c.current_price} (Var 24h: ${var24h}%, Var 7d: ${var7d}%, ATH: $${c.ath})`;
+                }).join(' | ');
             }
 
             const systemContext = `ESTADO ACTUAL DEL MERCADO (No menciones explícitamente que te estoy pasando estos datos a menos que sea útil para responder al usuario. Si te preguntan precios, utiliza esta información):\nBTC: ${btcPrice}, Dólar Blue: ${bluePrice}, Fear&Greed: ${fng}, Riesgo País: ${riesgo}.\nPrecios de Top 50 Cryptos en este segundo: ${cryptoPricesCtx}\n\nResponde como un analista financiero conciso.`;
