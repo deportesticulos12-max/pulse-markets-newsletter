@@ -1315,14 +1315,16 @@ FORMATO GENERAL:
             try {
                 const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42SVNuQUdhRGtobTNNS2dhVFlpWDliek40eWFjY0xQZG1OYURwblVyNjNXVVE=');
                 const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: chatHistory })
                 });
                 
                 const data = await res.json();
-                document.getElementById(loadingId).remove();
+                
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
 
                 if (data.error) throw new Error(data.error.message);
 
@@ -1334,8 +1336,9 @@ FORMATO GENERAL:
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 
             } catch (err) {
-                document.getElementById(loadingId).remove();
-                messagesContainer.innerHTML += `<div class="chat-bubble ai" style="color:var(--accent-rose)">Error de red: ${err.message}.</div>`;
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+                messagesContainer.innerHTML += `<div class="chat-bubble ai" style="color:var(--accent-rose)">Error: ${err.message}</div>`;
                 chatHistory.pop();
             } finally {
                 input.disabled = false;
