@@ -1313,6 +1313,7 @@ FORMATO GENERAL:
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             try {
+                const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42SVNuQUdhRGtobTNNS2dhVFlpWDliek40eWFjY0xQZG1OYURwblVyNjNXVVE=');
                 const apiKey = localStorage.getItem('pm_gemini_api_key') || DEFAULT_GEMINI_KEY;
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
