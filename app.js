@@ -1302,7 +1302,13 @@ FORMATO GENERAL:
             const fng = document.getElementById('m-fng')?.innerText || 'N/A';
             const riesgo = document.getElementById('m-riesgo')?.innerText || 'N/A';
             
-            const cryptoMarkets = Cache.get('crypto_markets');
+            // Try cache first, otherwise fetch fresh
+            let cryptoMarkets = Cache.get('crypto_markets');
+            if (!cryptoMarkets || !Array.isArray(cryptoMarkets)) {
+                try {
+                    cryptoMarkets = await fetchCryptoMarkets();
+                } catch(e) { cryptoMarkets = null; }
+            }
             let cryptoPricesCtx = 'No data';
             if (cryptoMarkets && Array.isArray(cryptoMarkets)) {
                 cryptoPricesCtx = cryptoMarkets.slice(0, 50).map(c => {
