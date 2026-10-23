@@ -830,7 +830,9 @@ PAUTAS CRÍTICAS DE CONTEXTO:
   3) Grado de adopción institucional según las noticias y alianzas corporativas.
 - REGLA DE REALISMO ABSOLUTO: Redacta el informe con tono analítico profesional firme y 100% seguro. No pidas disculpas por no tener datos ni digas "no se encontraron datos en los resultados de la búsqueda".
 - Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
-- OBLIGATORIO: SEGUNDA SECCIÓN SOBRE EVENTOS DE ALTO IMPACTO (3 ESTRELLAS): En el punto 2 de la estructura obligatoria, debes desglosar obligatoriamente los eventos macroeconómicos de 3 estrellas listados arriba (como CPI, Tasas de Interés, PIB, Desempleo, etc.). Explica con claridad meridiana: qué se espera (pronóstico vs previo) y cómo afectará su publicación al mercado según los posibles escenarios: si el dato sale por encima/debajo de lo previsto, cómo impactará al Dólar (DXY), a los Bonos del Tesoro, a Wall Street y a la liquidez de Bitcoin y las criptomonedas.
+- OBLIGATORIO: SEGUNDA SECCIÓN SOBRE EVENTOS DE ALTO IMPACTO (3 ESTRELLAS): En el punto 2 de la estructura obligatoria, debes identificar y desglosar obligatoriamente los eventos y datos macroeconómicos de 3 estrellas de alto impacto del día y de la semana (por ejemplo: PMI Manufacturero, PMI de Servicios, IPC/Inflación, Tasas de la Fed, Empleo/NFP, etc.) utilizando la herramienta Google Search para consultar el calendario en vivo de Investing.com y TradingView si es necesario.
+  Detalla con precisión matemática los números exactos: valor publicado (Actual), previsión (Pronóstico) y valor previo.
+  Explica con claridad meridiana cómo este dato afecta y afectará al mercado según los posibles escenarios: impacto en el Dólar (DXY), rendimientos de los Bonos del Tesoro, Wall Street y la liquidez de Bitcoin y el mercado cripto. Prohibido responder que no hay datos.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
 - DATOS DE DERIVADOS EN VIVO (MANDATORIO): Las **Tasas de Financiación (Funding Rates)** actuales y exactas extraídas directamente del exchange Binance en este momento son: **BTC: ${btcFunding} | ETH: ${ethFunding}**.
   Debes plasmar ESTOS NÚMEROS EXACTOS en la sección de Análisis On-Chain y Derivados. Explica qué significan: si la tasa es cercana a 0.0100%, es neutral. Si es mucho más alta, indica exceso de apalancamiento en largos (compras) y riesgo de corrección. Si es negativa, indica exceso de apalancamiento en cortos (ventas).
@@ -892,7 +894,7 @@ FORMATO GENERAL:
 - Evita relleno innecesario.
 - Muestra los datos de forma atractiva.`;
 
-            const modelsToTry = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-3.1-pro-preview'];
+            const modelsToTry = ['gemini-2.5-flash', 'gemini-3.1-pro-preview'];
             let response = null;
             let lastErrorMsg = '';
 
