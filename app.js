@@ -741,24 +741,42 @@
                 console.warn('[PulseMarkets] Could not fetch Binance funding rates', e);
             }
 
-            // Fetch High-Impact (3 Estrellas) Economic Calendar Events for the week
+            // Fetch High-Impact (3 Estrellas) Economic Calendar Events
             let economicEventsCtx = 'No se registraron eventos de alto impacto para esta semana.';
             try {
-                const ffEvents = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json').then(r => r.json());
-                if (Array.isArray(ffEvents)) {
-                    const highImpact = ffEvents.filter(ev => ev.impact === 'High');
-                    if (highImpact.length > 0) {
-                        economicEventsCtx = highImpact.slice(0, 8).map(ev => {
+                // Fetch directly from TradingView Economic Calendar (used in Investing.com / TV widgets)
+                const fromIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                const toIso = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString();
+                const tvCalUrl = `https://economic-calendar.tradingview.com/events?from=${encodeURIComponent(fromIso)}&to=${encodeURIComponent(toIso)}&countries=US,EU,GB`;
+                
+                const calRes = await fetch(tvCalUrl, {
+                    headers: { 'Origin': 'https://www.tradingview.com' }
+                }).then(r => r.json());
+
+                if (calRes && Array.isArray(calRes.result)) {
+                    // Filter: High importance (1) or US/EU key reports (PMI, Sentiment, Claims, GDP, CPI, Fed) with importance >= 0
+                    const keyEvents = calRes.result.filter(ev => {
+                        if (ev.importance === 1) return true;
+                        if (ev.importance === 0 && (ev.country === 'US' || ev.country === 'EU')) {
+                            const t = (ev.title || '').toLowerCase();
+                            return t.includes('pmi') || t.includes('cpi') || t.includes('sentiment') || t.includes('claims') || t.includes('fed') || t.includes('gdp') || t.includes('retail');
+                        }
+                        return false;
+                    });
+
+                    if (keyEvents.length > 0) {
+                        economicEventsCtx = keyEvents.slice(0, 10).map(ev => {
                             const dateObj = new Date(ev.date);
                             const timeStr = !isNaN(dateObj) ? dateObj.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : ev.date;
-                            const forecastStr = ev.forecast ? ` | Pronóstico: ${ev.forecast}` : '';
-                            const prevStr = ev.previous ? ` | Previo: ${ev.previous}` : '';
-                            return `[${ev.country} - 3 ESTRELLAS] ${ev.title} (${timeStr}${forecastStr}${prevStr})`;
+                            const actStr = (ev.actual !== null && ev.actual !== undefined) ? ` | Actual (Publicado): ${ev.actual}${ev.unit || ''}` : ' | Pendiente de publicación';
+                            const forecastStr = (ev.forecast !== null && ev.forecast !== undefined) ? ` | Pronóstico: ${ev.forecast}${ev.unit || ''}` : '';
+                            const prevStr = (ev.previous !== null && ev.previous !== undefined) ? ` | Previo: ${ev.previous}${ev.unit || ''}` : '';
+                            return `[${ev.country} - IMPACTO CLAVE 3 ESTRELLAS] ${ev.title} (${timeStr}${actStr}${forecastStr}${prevStr})`;
                         }).join('\n');
                     }
                 }
             } catch (e) {
-                console.warn('[PulseMarkets] Could not fetch High-Impact Economic Calendar', e);
+                console.warn('[PulseMarkets] Could not fetch TradingView Economic Calendar', e);
             }
 
             // Gather context data for the prompt
