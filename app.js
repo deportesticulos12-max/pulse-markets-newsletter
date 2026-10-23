@@ -741,26 +741,6 @@
                 console.warn('[PulseMarkets] Could not fetch Binance funding rates', e);
             }
 
-            // Fetch High-Impact (3 Estrellas) Economic Calendar Events for the week
-            let economicEventsCtx = 'No se registraron eventos de alto impacto para esta semana.';
-            try {
-                const ffEvents = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json').then(r => r.json());
-                if (Array.isArray(ffEvents)) {
-                    const highImpact = ffEvents.filter(ev => ev.impact === 'High');
-                    if (highImpact.length > 0) {
-                        economicEventsCtx = highImpact.slice(0, 8).map(ev => {
-                            const dateObj = new Date(ev.date);
-                            const timeStr = !isNaN(dateObj) ? dateObj.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : ev.date;
-                            const forecastStr = ev.forecast ? ` | Pronóstico: ${ev.forecast}` : '';
-                            const prevStr = ev.previous ? ` | Previo: ${ev.previous}` : '';
-                            return `[${ev.country} - 3 ESTRELLAS] ${ev.title} (${timeStr}${forecastStr}${prevStr})`;
-                        }).join('\n');
-                    }
-                }
-            } catch (e) {
-                console.warn('[PulseMarkets] Could not fetch High-Impact Economic Calendar', e);
-            }
-
             // Gather context data for the prompt
             const cryptoNews = Cache.get('crypto_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
             const usNews = Cache.get('us_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
@@ -799,8 +779,6 @@ ${cryptoPricesCtx}
 - Titulares Crypto hoy: ${cryptoNews}
 - Titulares Wall Street hoy: ${usNews}
 - Titulares Argentina hoy: ${argNews}
-- Eventos Económicos Clave de Alto Impacto (3 Estrellas) Programados para esta Semana:
-${economicEventsCtx}
 - Horizonte Temporal Solicitado: ${targetHorizon === 'short' ? 'CORTO PLAZO (TRADING / MOMENTUM / SWING de 1 a 14 días)' : 'LARGO PLAZO (INVERSIÓN DE VALOR / FUNDAMENTOS)'}
 
 PAUTAS CRÍTICAS DE CONTEXTO:
@@ -812,7 +790,6 @@ PAUTAS CRÍTICAS DE CONTEXTO:
   3) Grado de adopción institucional según las noticias y alianzas corporativas.
 - REGLA DE REALISMO ABSOLUTO: Redacta el informe con tono analítico profesional firme y 100% seguro. No pidas disculpas por no tener datos ni digas "no se encontraron datos en los resultados de la búsqueda".
 - Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
-- OBLIGATORIO: SEGUNDA SECCIÓN SOBRE EVENTOS DE ALTO IMPACTO (3 ESTRELLAS): En el punto 2 de la estructura obligatoria, debes desglosar obligatoriamente los eventos macroeconómicos de 3 estrellas listados arriba (como CPI, Tasas de Interés, PIB, Desempleo, etc.). Explica con claridad meridiana: qué se espera (pronóstico vs previo) y cómo afectará su publicación al mercado según los posibles escenarios: si el dato sale por encima/debajo de lo previsto, cómo impactará al Dólar (DXY), a los Bonos del Tesoro, a Wall Street y a la liquidez de Bitcoin y las criptomonedas.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
 - DATOS DE DERIVADOS EN VIVO (MANDATORIO): Las **Tasas de Financiación (Funding Rates)** actuales y exactas extraídas directamente del exchange Binance en este momento son: **BTC: ${btcFunding} | ETH: ${ethFunding}**.
   Debes plasmar ESTOS NÚMEROS EXACTOS en la sección de Análisis On-Chain y Derivados. Explica qué significan: si la tasa es cercana a 0.0100%, es neutral. Si es mucho más alta, indica exceso de apalancamiento en largos (compras) y riesgo de corrección. Si es negativa, indica exceso de apalancamiento en cortos (ventas).
@@ -820,13 +797,12 @@ PAUTAS CRÍTICAS DE CONTEXTO:
 
 ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
 1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
-2. CALENDARIO ECONÓMICO: EVENTOS DE ALTO IMPACTO (3 ESTRELLAS) Y SU IMPACTO PREVISTO (OBLIGATORIO ser el segundo apartado. Analiza los eventos 3 estrellas provistos arriba: qué dato se espera, pronósticos, y qué impacto alcista o bajista provocará en DXY, Wall Street y Bitcoin según los escenarios posibles)
-3. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre)
-4. COMPORTAMIENTO INSTITUCIONAL (Análisis de grandes movimientos y adopción basándote únicamente en los titulares de noticias. NO menciones flujos específicos de ETF porque no hay datos, pero analiza el sentimiento corporativo)
-5. ANÁLISIS TÉCNICO Y DERIVADOS (Situación actual basada en el precio, el Fear & Greed y las **Tasas de Financiación Reales en Binance provistas arriba (BTC: ${btcFunding}, ETH: ${ethFunding})** para evaluar el nivel de apalancamiento)
-6. SENTIMIENTO DEL MERCADO
-7. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
-8. RECOMENDACIONES TÁCTICAS
+2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre)
+3. COMPORTAMIENTO INSTITUCIONAL (Análisis de grandes movimientos y adopción basándote únicamente en los titulares de noticias. NO menciones flujos específicos de ETF porque no hay datos, pero analiza el sentimiento corporativo)
+4. ANÁLISIS TÉCNICO Y DERIVADOS (Situación actual basada en el precio, el Fear & Greed y las **Tasas de Financiación Reales en Binance provistas arriba (BTC: ${btcFunding}, ETH: ${ethFunding})** para evaluar el nivel de apalancamiento)
+5. SENTIMIENTO DEL MERCADO
+6. CONCLUSIÓN ESTRATÉGICA (Alcista, Bajista o Neutral para Crypto, Merval y Wall Street. Explica el porqué.)
+7. RECOMENDACIONES TÁCTICAS
 
 OPORTUNIDADES DIVERSIFICADAS (SECCIÓN ESPECIAL AL FINAL DEL JSON):
 Debes proponer exactamente 3 oportunidades por categoría de activos acorde al Horizonte Temporal solicitado (${targetHorizon === 'short' ? 'Corto Plazo: especulación de 1-14 días, alta volatilidad' : 'Largo Plazo: acumulación de valor, fundamentos sólidos'}):
