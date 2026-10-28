@@ -743,7 +743,7 @@
 
             // Gather context data for the prompt
             const cryptoNews = Cache.get('crypto_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
-            const usNews = Cache.get('us_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
+            const usNews = Cache.get('us_news')?.items?.slice(0, 10).map(i => i.title).join(' | ') || 'No data';
             const argNews = Cache.get('arg_news')?.items?.slice(0, 5).map(i => i.title).join(' | ') || 'No data';
             
             const btcPrice = document.getElementById('m-btc').innerText;
@@ -789,20 +789,16 @@ PAUTAS CRÍTICAS DE CONTEXTO:
   2) Próximas actualizaciones tecnológicas programadas en su roadmap y cómo afectarán su ecosistema en cuanto a escalabilidad, seguridad o descentralización.
   3) Grado de adopción institucional según las noticias y alianzas corporativas.
 - REGLA DE REALISMO ABSOLUTO: Redacta el informe con tono analítico profesional firme y 100% seguro. No pidas disculpas por no tener datos ni digas "no se encontraron datos en los resultados de la búsqueda".
-- FILTRO DE RELEVANCIA FINANCIERA DIRECTA (OBLIGATORIO Y ESTRICTO): En el apartado 1 (CONTEXTO MACROECONOMICO Y GEOPOLITICO), manten la amplitud analitica pero ELIMINA cualquier teoria abstracta, relleno enciclopedico o noticia lateral que no tenga un IMPACTO DIRECTO Y TANGIBLE en las cotizaciones y la liquidez de los mercados financieros. Cada punto debe responder estrictamente a: como mueve esto la aguja hoy en precios, tasas y flujos de capital. Enfocate exclusivamente en catalizadores con impacto de mercado directo:
-  1) **Decisiones de Bancos Centrales y Tasas:** Expectativas de la Fed, BCE y BoJ que mueven de forma inmediata el costo del capital y las valuaciones.
-  2) **Curva de Rendimientos (Yields) y Dolar (DXY):** Como la presion en las tasas de los Bonos del Tesoro a 10 anos y la cotizacion del Dolar drenan o inyectan liquidez directa en Wall Street y en el mercado cripto.
-  3) **Datos Macro Economicos Clave:** Inflacion (CPI/PCE), empleo y actividad que impacten directamente en las probabilidades de recortes o subas de tasas.
-  4) **Geopolitica con Impacto Financiero Real:** Conflictos o tensiones SOLO si amenazan de forma directa la oferta de petroleo/gas, rutas de comercio maritimo estrategicas o desatan picos reales de aversion al riesgo hacia el oro y activos de resguardo.
-  5) **Coyuntura Argentina con Impacto Financiero:** Variables con efecto directo en carteras (brecha cambiaria con Dolar Blue, reservas liquidas del BCRA, y dinamica de bonos soberanos y Riesgo Pais).
-  6) **Impacto Concreto en Wall Street y Bitcoin:** Conclusion neta de si el entorno macro actual promueve entradas de capital (Risk-On) o ventas defensivas y busqueda de refugio (Risk-Off).
+- REGLA DEL CONTEXTO MACRO (OBLIGATORIA): El apartado 1 debe tener un MAXIMO de 4 parrafos cortos y basarse EXCLUSIVAMENTE en HECHOS REALES: noticias, datos publicados y eventos programados de esta semana (usa los titulares provistos y la herramienta de busqueda de Google para verificar lo que realmente paso o esta por pasar). Cada parrafo debe citar hechos concretos: que decision, dato, declaracion o evento ocurrio o esta agendado (con fecha, cifra o nombre propio) y como reacciono o se espera que reaccione el mercado.
+  PROHIBIDO: escenarios hipoteticos ("si la Fed hiciera X...", "cualquier indicio de...", "podria inyectar liquidez"), explicaciones teoricas o genericas de como funcionan las tasas/el DXY, y frases de relleno sin dato. Si no hay una novedad real sobre un tema, OMITELO por completo en lugar de rellenar.
+  Temas candidatos (solo si hay novedad real y de impacto directo en precios): decisiones/declaraciones recientes y proximas de Fed, BCE o BoJ; datos macro publicados o por publicarse (CPI, empleo, PIB, PMI) con su cifra vs expectativa; movimiento actual de yields a 10 anos y DXY; conflictos o noticias geopoliticas que ya mueven petroleo, oro o riesgo; novedades financieras de Argentina (reservas BCRA, brecha, riesgo pais); y cierre con la reaccion actual de Wall Street y Bitcoin.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
 - DATOS DE DERIVADOS EN VIVO (MANDATORIO): Las **Tasas de Financiación (Funding Rates)** actuales y exactas extraídas directamente del exchange Binance en este momento son: **BTC: ${btcFunding} | ETH: ${ethFunding}**.
   Debes plasmar ESTOS NÚMEROS EXACTOS en la sección de Análisis On-Chain y Derivados. Explica qué significan: si la tasa es cercana a 0.0100%, es neutral. Si es mucho más alta, indica exceso de apalancamiento en largos (compras) y riesgo de corrección. Si es negativa, indica exceso de apalancamiento en cortos (ventas).
 - PROHIBICIÓN DE DATOS PREMIUM: Queda terminantemente prohibido pedir disculpas por no encontrar o mencionar el volumen de entradas/salidas de los ETF de Bitcoin, ni los ratios MVRV o NVT. No los busques ni los menciones porque es información premium. Evalúa el interés institucional basándote *únicamente* en las noticias provistas.
 
-ESTRUCTURA OBLIGATORIA (IMPORTANTE: El apartado 1 de Contexto Macroeconómico debe ser EXTENSO, amplio y detallado, mientras que los demás apartados deben ser concisos y directos):
-1. CONTEXTO MACROECONOMICO Y GEOPOLITICO (PANORAMA DE ALTO IMPACTO EN MERCADOS: Debe ser extenso y completo pero 100% enfocado en lo que mueve precios y liquidez: Tasas y Bancos Centrales; Bonos del Tesoro y DXY; Inflacion y Empleo; Geopolitica y Petroleo; Situacion Financiera de Argentina; y Transmision Directa hacia Wall Street y Bitcoin)
+ESTRUCTURA OBLIGATORIA (IMPORTANTE: El apartado 1 tiene un maximo de 4 parrafos y solo hechos reales; los demas apartados deben ser concisos y directos):
+1. CONTEXTO MACROECONOMICO Y GEOPOLITICO (MAXIMO 4 PARRAFOS. Solo noticias, datos y eventos reales ocurridos o agendados, con cifras y fechas. Sin hipotesis ni teoria)
 2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre)
 3. COMPORTAMIENTO INSTITUCIONAL (Análisis de grandes movimientos y adopción basándote únicamente en los titulares de noticias. NO menciones flujos específicos de ETF porque no hay datos, pero analiza el sentimiento corporativo)
 4. ANÁLISIS TÉCNICO Y DERIVADOS (Situación actual basada en el precio, el Fear & Greed y las **Tasas de Financiación Reales en Binance provistas arriba (BTC: ${btcFunding}, ETH: ${ethFunding})** para evaluar el nivel de apalancamiento)
