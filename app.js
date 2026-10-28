@@ -789,14 +789,14 @@ PAUTAS CRÍTICAS DE CONTEXTO:
   2) Próximas actualizaciones tecnológicas programadas en su roadmap y cómo afectarán su ecosistema en cuanto a escalabilidad, seguridad o descentralización.
   3) Grado de adopción institucional según las noticias y alianzas corporativas.
 - REGLA DE REALISMO ABSOLUTO: Redacta el informe con tono analítico profesional firme y 100% seguro. No pidas disculpas por no tener datos ni digas "no se encontraron datos en los resultados de la búsqueda".
-- Incorpora en el análisis el impacto de tensiones geopolíticas globales recientes o conflictos activos de alto nivel basándote en los titulares del día. Analiza cómo estas tensiones impactan la aversión al riesgo global y el flujo de capitales.
+- REGLA DE PROFUNDIDAD EN EL CONTEXTO MACRO (OBLIGATORIO): El apartado 1 (CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO) debe ser el más extenso y completo de todo el resumen (mínimo 3 a 4 párrafos densos y bien estructurados). Queda prohibido resumirlo en un solo párrafo genérico. Debe abarcar con rigor: 1) Política monetaria de la Fed, tasas de interés, expectativas de política monetaria, DXY y rendimientos del Tesoro; 2) Coyuntura en Europa, Asia/China y Argentina (desinflación, reservas, riesgo país); 3) Tensiones geopolíticas globales y conflictos activos, y cómo impactan la aversión al riesgo; 4) Dinámica de transmisión de liquidez y apetito por riesgo hacia Wall Street y Bitcoin.
 - Realiza obligatoriamente un análisis sintético sobre **Commodities clave**: Oro (XAU), Petróleo (WTI/Brent) y Cobre (HG). Detalla específicamente si los bancos centrales, gobiernos y grandes instituciones financieras están acumulando oro físicamente como reserva frente a la desdolarización y la inflación, y cuál es la tendencia de demanda del cobre a nivel mundial debido a la transición energética y la infraestructura de inteligencia artificial.
 - DATOS DE DERIVADOS EN VIVO (MANDATORIO): Las **Tasas de Financiación (Funding Rates)** actuales y exactas extraídas directamente del exchange Binance en este momento son: **BTC: ${btcFunding} | ETH: ${ethFunding}**.
   Debes plasmar ESTOS NÚMEROS EXACTOS en la sección de Análisis On-Chain y Derivados. Explica qué significan: si la tasa es cercana a 0.0100%, es neutral. Si es mucho más alta, indica exceso de apalancamiento en largos (compras) y riesgo de corrección. Si es negativa, indica exceso de apalancamiento en cortos (ventas).
 - PROHIBICIÓN DE DATOS PREMIUM: Queda terminantemente prohibido pedir disculpas por no encontrar o mencionar el volumen de entradas/salidas de los ETF de Bitcoin, ni los ratios MVRV o NVT. No los busques ni los menciones porque es información premium. Evalúa el interés institucional basándote *únicamente* en las noticias provistas.
 
-ESTRUCTURA OBLIGATORIA (Resume cada punto para que sea rápido de leer en un dashboard web):
-1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (Análisis de coyuntura global, tensiones geopolíticas activas y su impacto en el sentimiento inversor)
+ESTRUCTURA OBLIGATORIA (IMPORTANTE: El apartado 1 de Contexto Macroeconómico debe ser EXTENSO, amplio y detallado, mientras que los demás apartados deben ser concisos y directos):
+1. CONTEXTO MACROECONÓMICO Y GEOPOLÍTICO (ANÁLISIS EXTENSO Y PROFUNDO: Debe ser la sección más amplia y detallada del reporte, con al menos 3 a 4 párrafos completos. Analiza: 1) Política monetaria de la Fed, tasas, DXY y rendimientos de bonos; 2) Coyuntura económica de Europa, Asia y Argentina con inflación y riesgo país; 3) Geopolítica activa y aversión al riesgo; 4) Flujo de liquidez global hacia Wall Street y Cripto)
 2. ANÁLISIS DE COMMODITIES CLAVE (Situación de Oro, Petróleo y Cobre)
 3. COMPORTAMIENTO INSTITUCIONAL (Análisis de grandes movimientos y adopción basándote únicamente en los titulares de noticias. NO menciones flujos específicos de ETF porque no hay datos, pero analiza el sentimiento corporativo)
 4. ANÁLISIS TÉCNICO Y DERIVADOS (Situación actual basada en el precio, el Fear & Greed y las **Tasas de Financiación Reales en Binance provistas arriba (BTC: ${btcFunding}, ETH: ${ethFunding})** para evaluar el nivel de apalancamiento)
@@ -850,7 +850,7 @@ FORMATO GENERAL:
 - Evita relleno innecesario.
 - Muestra los datos de forma atractiva.`;
 
-            const modelsToTry = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-3.1-pro-preview'];
+            const modelsToTry = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-flash-lite-latest'];
             let response = null;
             let lastErrorMsg = '';
 
